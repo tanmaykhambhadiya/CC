@@ -26,6 +26,9 @@ app.use('/api/submissions', submissionRoutes);
 app.use('/api/subscribe', subscribeRoutes);
 
 // Health check
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', service: 'ConcertCircle API', timestamp: new Date().toISOString() });
+});
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
