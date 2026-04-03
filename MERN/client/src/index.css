@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: hsl(240, 10%, 8%);
+  --color-foreground: hsl(0, 0%, 98%);
+  --color-primary: hsl(280, 85%, 65%);
+  --color-secondary: hsl(240, 10%, 16%);
+  --color-accent: hsl(320, 70%, 60%);
+  --color-concert-purple: hsl(280, 85%, 65%);
+  --color-concert-pink: hsl(320, 70%, 60%);
+  --color-concert-dark: hsl(240, 10%, 8%);
+  --color-concert-card: hsl(240, 10%, 12%);
+  --color-concert-border: hsla(280, 85%, 65%, 0.3);
+  --color-muted: hsl(240, 5%, 65%);
+  --color-border: hsl(240, 10%, 20%);
+  --color-success: hsl(120, 60%, 50%);
+  --color-warning: hsl(45, 90%, 60%);
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Open Sans', sans-serif;
+}
+
+@keyframes gradient-bg {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  50% { transform: scale(1.1); opacity: 0.3; }
+  100% { transform: scale(0.8); opacity: 0.6; }
+}
+
+body {
+  font-family: var(--font-body);
+  background: linear-gradient(135deg, var(--color-concert-dark), var(--color-secondary), var(--color-concert-dark));
+  background-size: 200% 200%;
+  animation: gradient-bg 15s ease infinite;
+  color: var(--color-foreground);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
