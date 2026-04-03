@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import Reveal from '../components/Reveal';
 
 export default function TicketPurchase() {
   const [form, setForm] = useState({
@@ -36,13 +37,17 @@ export default function TicketPurchase() {
   }
 
   return (
-    <div className="py-12 px-6">
+    <div className="py-12 px-6 page-enter">
       <div className="max-w-2xl mx-auto">
+        <Reveal animation="fade-down">
         <h1 className="font-heading font-black text-4xl text-center mb-4">
           <span className="text-foreground">Get Your </span>
-          <span className="text-primary">Tickets</span>
+          <span className="text-shimmer">Tickets</span>
         </h1>
         <p className="text-center text-muted text-lg mb-10">Fill in your details and we'll get back to you within 24 hours</p>
+        </Reveal>
+
+        <Reveal animation="fade-up" delay={1}>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <select name="ticketType" value={form.ticketType} onChange={handleChange} className={inputClass} required>
@@ -61,11 +66,12 @@ export default function TicketPurchase() {
             <input name="quantity" type="number" min="1" value={form.quantity} onChange={handleChange} className={inputClass} required />
           </div>
           <button type="submit" disabled={loading}
-            className="w-full py-4 bg-primary rounded-xl font-bold text-white text-lg hover:bg-primary/80 transition-all disabled:opacity-50">
+            className="w-full py-4 bg-primary rounded-xl font-bold text-white text-lg btn-animate disabled:opacity-50">
             {loading ? 'Submitting...' : 'Get My Tickets'}
           </button>
           {result?.message && !result.success && <p className="text-red-500 text-center">{result.message}</p>}
         </form>
+        </Reveal>
       </div>
     </div>
   );

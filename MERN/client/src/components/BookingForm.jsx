@@ -74,7 +74,7 @@ export default function BookingForm({ packageType, packageName, minGroup = 1, ma
       <input name="discountCode" placeholder="Discount Code (optional)" value={form.discountCode} onChange={handleChange} className={inputClass} />
 
       <button type="submit" disabled={loading}
-        className="w-full py-4 bg-primary rounded-xl font-bold text-white text-lg hover:bg-primary/80 transition-all disabled:opacity-50">
+        className="w-full py-4 bg-primary rounded-xl font-bold text-white text-lg btn-animate disabled:opacity-50">
         {loading ? 'Booking...' : `Book ${packageName}`}
       </button>
       {result?.message && !result.success && <p className="text-red-500 text-center">{result.message}</p>}

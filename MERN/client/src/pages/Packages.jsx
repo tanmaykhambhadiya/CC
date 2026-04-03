@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Reveal from '../components/Reveal';
 
 const packages = [
   {
@@ -23,18 +24,21 @@ const packages = [
 
 export default function Packages() {
   return (
-    <div className="py-12 px-6">
+    <div className="py-12 px-6 page-enter">
       <div className="max-w-[1400px] mx-auto">
-        <h1 className="text-center font-heading font-black text-4xl mb-4">
-          <span className="text-foreground">Concert </span>
-          <span className="text-primary">Packages</span>
-        </h1>
-        <p className="text-center text-muted text-lg mb-12">Choose your perfect concert experience package</p>
+        <Reveal animation="fade-down">
+          <h1 className="text-center font-heading font-black text-4xl mb-4">
+            <span className="text-foreground">Concert </span>
+            <span className="text-shimmer">Packages</span>
+          </h1>
+          <p className="text-center text-muted text-lg mb-12">Choose your perfect concert experience package</p>
+        </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {packages.map((pkg) => (
-            <div key={pkg.id} className="bg-concert-card border border-concert-border rounded-2xl overflow-hidden hover:-translate-y-2 transition-transform">
-              <div className="h-56 bg-cover bg-center" style={{ backgroundImage: `url(${pkg.img})` }} />
+          {packages.map((pkg, idx) => (
+            <Reveal key={pkg.id} animation="fade-up" delay={idx + 1} duration={600}>
+            <div className="bg-concert-card border border-concert-border rounded-2xl overflow-hidden hover-lift hover-glow">
+              <div className="h-56 bg-cover bg-center transition-transform duration-500 hover:scale-105 overflow-hidden" style={{ backgroundImage: `url(${pkg.img})` }} />
               <div className="p-6">
                 <h3 className="font-heading font-bold text-2xl mb-2">{pkg.title}</h3>
                 <p className="text-muted mb-2">📍 {pkg.desc}</p>
@@ -44,11 +48,12 @@ export default function Packages() {
                 </ul>
                 <p className="text-right text-primary font-bold text-lg mb-4">Starting {pkg.price}</p>
                 <div className="flex flex-col gap-3">
-                  <Link to={pkg.link} className="block text-center py-3 bg-primary rounded-xl font-bold text-white hover:bg-primary/80 transition-all">Book Now</Link>
+                  <Link to={pkg.link} className="block text-center py-3 bg-primary rounded-xl font-bold text-white btn-animate">Book Now</Link>
                   <a href="tel:+911234567890" className="block text-center py-3 border border-primary rounded-xl font-bold text-primary hover:bg-primary/10 transition-all">Call Now</a>
                 </div>
               </div>
             </div>
+            </Reveal>
           ))}
         </div>
       </div>

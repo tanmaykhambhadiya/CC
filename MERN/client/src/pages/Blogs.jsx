@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Reveal from '../components/Reveal';
 
 const allBlogs = [
   { id: 1, img: '/img/b-1.png', title: 'How to Plan Your Epic Travis Scott Concert Trip in Delhi', desc: 'Your zero-stress guide to the ultimate concert experience' },
@@ -11,24 +12,28 @@ const allBlogs = [
 
 export default function Blogs() {
   return (
-    <div className="py-12 px-6">
+    <div className="py-12 px-6 page-enter">
       <div className="max-w-[1400px] mx-auto">
-        <h1 className="text-center font-heading font-black text-4xl mb-4">
-          <span className="text-foreground">Concert Circle </span>
-          <span className="text-primary">Blogs</span>
-        </h1>
-        <p className="text-center text-muted text-lg mb-12">News, Hacks and Wildest Concert Stories</p>
+        <Reveal animation="fade-down">
+          <h1 className="text-center font-heading font-black text-4xl mb-4">
+            <span className="text-foreground">Concert Circle </span>
+            <span className="text-shimmer">Blogs</span>
+          </h1>
+          <p className="text-center text-muted text-lg mb-12">News, Hacks and Wildest Concert Stories</p>
+        </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {allBlogs.map((blog) => (
-            <div key={blog.id} className="bg-concert-card border border-concert-border rounded-2xl overflow-hidden hover:-translate-y-1 transition-transform">
-              <div className="h-48 bg-cover bg-center" style={{ backgroundImage: `url(${blog.img})` }} />
+          {allBlogs.map((blog, idx) => (
+            <Reveal key={blog.id} animation="fade-up" delay={(idx % 3) + 1} duration={600}>
+            <div className="bg-concert-card border border-concert-border rounded-2xl overflow-hidden hover-lift hover-glow">
+              <div className="h-48 bg-cover bg-center transition-transform duration-500 hover:scale-105 overflow-hidden" style={{ backgroundImage: `url(${blog.img})` }} />
               <div className="p-6">
                 <h3 className="font-heading font-bold text-lg mb-2">{blog.title}</h3>
                 <p className="text-muted text-sm mb-4">{blog.desc}</p>
                 <Link to={`/blog/${blog.id}`} className="text-primary font-semibold hover:underline">Read More →</Link>
               </div>
             </div>
+            </Reveal>
           ))}
         </div>
       </div>

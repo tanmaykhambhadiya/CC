@@ -1,10 +1,12 @@
 import BookingForm from '../components/BookingForm';
+import Reveal from '../components/Reveal';
 
 export default function RideToTheRage() {
   return (
-    <div className="py-12 px-6">
+    <div className="py-12 px-6 page-enter">
       <div className="max-w-[1400px] mx-auto">
         {/* Hero */}
+        <Reveal animation="scale-in" duration={800}>
         <div className="relative h-[300px] md:h-[400px] rounded-2xl overflow-hidden mb-12">
           <img src="/img/p-1.jpeg" alt="Ride to the Rage" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
@@ -13,9 +15,11 @@ export default function RideToTheRage() {
             <p className="text-muted text-lg">📍 Travis Scott Concert - Delhi</p>
           </div>
         </div>
+        </Reveal>
 
         {/* Details */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+          <Reveal animation="fade-left">
           <div>
             <h2 className="font-heading font-bold text-2xl mb-6 text-primary">What's Included</h2>
             <ul className="space-y-4">
@@ -32,10 +36,13 @@ export default function RideToTheRage() {
               <p className="text-muted text-sm mt-2">✅ For solo or budget fans</p>
             </div>
           </div>
+          </Reveal>
+          <Reveal animation="fade-right" delay={2}>
           <div>
             <h2 className="font-heading font-bold text-2xl mb-6 text-primary">Book Your Experience</h2>
             <BookingForm packageType="fly-to-the-rage" packageName="Ride to the Rage" minGroup={1} maxGroup={1} />
           </div>
+          </Reveal>
         </div>
       </div>
     </div>

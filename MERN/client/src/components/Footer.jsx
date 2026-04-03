@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
+import Reveal from './Reveal';
 
 export default function Footer() {
   return (
     <footer className="bg-concert-card border-t border-concert-border mt-16">
+      <Reveal animation="fade-up">
       <div className="max-w-[1400px] mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -67,6 +69,7 @@ export default function Footer() {
           <p>&copy; {new Date().getFullYear()} Concert Circle. All rights reserved.</p>
         </div>
       </div>
+      </Reveal>
     </footer>
   );
 }

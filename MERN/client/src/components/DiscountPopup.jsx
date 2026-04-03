@@ -20,8 +20,8 @@ export default function DiscountPopup({ onClose }) {
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/60 z-50" onClick={onClose} />
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-concert-card border border-concert-border rounded-2xl p-8 w-[90%] max-w-md">
+      <div className="fixed inset-0 bg-black/60 z-50 modal-overlay" onClick={onClose} />
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-concert-card border border-concert-border rounded-2xl p-8 w-[90%] max-w-md modal-content">
         <button onClick={onClose} className="absolute top-3 right-3 text-muted hover:text-foreground text-xl">✕</button>
 
         {result?.success ? (
@@ -45,7 +45,7 @@ export default function DiscountPopup({ onClose }) {
             </div>
             <p className="text-warning text-sm text-center mb-4">Only 20 Codes Available – Don't Miss Out!</p>
             <button onClick={handleSubmit} disabled={loading}
-              className="w-full py-3 bg-primary rounded-xl font-bold text-white hover:bg-primary/80 transition-all disabled:opacity-50">
+              className="w-full py-3 bg-primary rounded-xl font-bold text-white btn-animate disabled:opacity-50">
               {loading ? 'Generating...' : "I'm In - Send Me The Code"}
             </button>
             {result?.message && <p className="text-red-500 text-sm text-center mt-2">{result.message}</p>}

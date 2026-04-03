@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import Reveal from '../components/Reveal';
 
 export default function Upload() {
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
@@ -40,14 +41,18 @@ export default function Upload() {
   }
 
   return (
-    <div className="py-12 px-6">
+    <div className="py-12 px-6 page-enter">
       <div className="max-w-2xl mx-auto">
+        <Reveal animation="fade-down">
         <h1 className="font-heading font-black text-4xl text-center mb-4">
           <span className="text-foreground">Win FREE </span>
-          <span className="text-primary">Tickets!</span>
+          <span className="text-shimmer">Tickets!</span>
         </h1>
         <p className="text-center text-muted text-lg mb-2">Going to Travis Scott Concert?</p>
         <p className="text-center text-muted mb-10">Upload your ticket → Be 1 of 5 fans who get their ticket <strong className="text-foreground">100% refunded!</strong></p>
+        </Reveal>
+
+        <Reveal animation="fade-up" delay={1}>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input name="name" placeholder="Full Name *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputClass} required />
@@ -62,11 +67,12 @@ export default function Upload() {
             </label>
           </div>
           <button type="submit" disabled={loading}
-            className="w-full py-4 bg-primary rounded-xl font-bold text-white text-lg hover:bg-primary/80 transition-all disabled:opacity-50">
+            className="w-full py-4 bg-primary rounded-xl font-bold text-white text-lg btn-animate disabled:opacity-50">
             {loading ? 'Uploading...' : 'Submit My Entry'}
           </button>
           {result?.message && !result.success && <p className="text-red-500 text-center">{result.message}</p>}
         </form>
+        </Reveal>
 
         <div className="mt-10 text-center text-muted text-sm">
           <p>5 winners announced Sept 25, 2025</p>

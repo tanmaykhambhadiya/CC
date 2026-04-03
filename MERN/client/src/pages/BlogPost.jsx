@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
+import Reveal from '../components/Reveal';
 
 const blogData = {
   1: {
@@ -85,24 +86,32 @@ export default function BlogPost() {
   }
 
   return (
-    <div className="py-12 px-6">
+    <div className="py-12 px-6 page-enter">
       <div className="max-w-3xl mx-auto">
         <Link to="/blogs" className="text-primary hover:underline mb-6 inline-block">← Back to Blogs</Link>
+        <Reveal animation="scale-in" duration={800}>
         <div className="h-[300px] md:h-[400px] rounded-2xl overflow-hidden mb-8">
           <img src={blog.img} alt={blog.title} className="w-full h-full object-cover" />
         </div>
-        <h1 className="font-heading font-black text-3xl md:text-4xl mb-8">{blog.title}</h1>
+        </Reveal>
+        <Reveal animation="fade-up">
+          <h1 className="font-heading font-black text-3xl md:text-4xl mb-8">{blog.title}</h1>
+        </Reveal>
         <div className="space-y-6">
           {blog.content.map((para, i) => (
-            <p key={i} className="text-muted text-lg leading-relaxed">{para}</p>
+            <Reveal key={i} animation="fade-up" delay={Math.min(i, 5)} duration={500}>
+              <p className="text-muted text-lg leading-relaxed">{para}</p>
+            </Reveal>
           ))}
         </div>
-        <div className="mt-12 p-8 bg-concert-card border border-concert-border rounded-2xl text-center">
+        <Reveal animation="scale-in">
+        <div className="mt-12 p-8 bg-concert-card border border-concert-border rounded-2xl text-center glow-border">
           <h3 className="font-heading font-bold text-xl mb-4">Ready for the Concert Experience?</h3>
-          <Link to="/packages" className="inline-block px-8 py-3 bg-primary rounded-full font-bold text-white hover:bg-primary/80 transition-all">
+          <Link to="/packages" className="inline-block px-8 py-3 bg-primary rounded-full font-bold text-white btn-animate">
             Explore Packages
           </Link>
         </div>
+        </Reveal>
       </div>
     </div>
   );

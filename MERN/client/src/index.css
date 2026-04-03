@@ -19,6 +19,7 @@
   --font-body: 'Open Sans', sans-serif;
 }
 
+/* ─── Base keyframes ─── */
 @keyframes gradient-bg {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -29,6 +30,149 @@
   0% { transform: scale(0.8); opacity: 0.6; }
   50% { transform: scale(1.1); opacity: 0.3; }
   100% { transform: scale(0.8); opacity: 0.6; }
+}
+
+/* ─── Scroll-reveal animations ─── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-50px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(50px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(60px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes popIn {
+  0%   { opacity: 0; transform: scale(0.6); }
+  70%  { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.3); }
+  50%      { box-shadow: 0 0 30px rgba(168, 85, 247, 0.6), 0 0 60px rgba(168, 85, 247, 0.2); }
+}
+@keyframes text-glow {
+  0%, 100% { text-shadow: 0 0 10px rgba(168, 85, 247, 0.3); }
+  50%      { text-shadow: 0 0 20px rgba(168, 85, 247, 0.6), 0 0 40px rgba(168, 85, 247, 0.2); }
+}
+@keyframes border-glow {
+  0%, 100% { border-color: hsla(280, 85%, 65%, 0.3); }
+  50%      { border-color: hsla(280, 85%, 65%, 0.7); }
+}
+
+/* ─── Reveal base state (hidden before in-view) ─── */
+.reveal {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.reveal.in-view {
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.in-view.fade-up        { animation-name: fadeInUp; }
+.reveal.in-view.fade-down      { animation-name: fadeInDown; }
+.reveal.in-view.fade-left      { animation-name: fadeInLeft; }
+.reveal.in-view.fade-right     { animation-name: fadeInRight; }
+.reveal.in-view.fade-in        { animation-name: fadeIn; }
+.reveal.in-view.scale-in       { animation-name: scaleIn; }
+.reveal.in-view.slide-up       { animation-name: slideInUp; }
+.reveal.in-view.pop-in         { animation-name: popIn; }
+
+/* ─── Stagger delay utility classes ─── */
+.delay-0 { animation-delay: 0ms; }
+.delay-1 { animation-delay: 100ms; }
+.delay-2 { animation-delay: 200ms; }
+.delay-3 { animation-delay: 300ms; }
+.delay-4 { animation-delay: 400ms; }
+.delay-5 { animation-delay: 500ms; }
+.delay-6 { animation-delay: 600ms; }
+.delay-7 { animation-delay: 700ms; }
+
+/* ─── Micro-interaction utilities ─── */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(168, 85, 247, 0.15);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+  border-color: hsla(280, 85%, 65%, 0.6);
+}
+
+.btn-animate {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.btn-animate:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
+}
+.btn-animate:active {
+  transform: scale(0.97);
+}
+
+.float-anim {
+  animation: float 3s ease-in-out infinite;
+}
+
+.glow-border {
+  animation: border-glow 2s ease-in-out infinite;
+}
+
+.text-shimmer {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent), var(--color-primary));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ─── Modal animation ─── */
+.modal-overlay {
+  animation: fadeIn 0.25s ease-out;
+}
+.modal-content {
+  animation: popIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── Page transition ─── */
+.page-enter {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 body {
