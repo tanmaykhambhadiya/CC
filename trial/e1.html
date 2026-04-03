@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="LOGO for website (circular).png" type="image/x-icon">
+    <link rel="icon" type="image/x-icon" href="LOGO for website (circular).png">
+    <link rel="shortcut icon" href="LOGO for website (circular).png" type="image/x-icon">
+    <title>Music Events & Concerts 2025</title>
+     <style>
+        /* CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4ddde0;
+            --secondary-color: #d269e6;
+            --accent-color: #ff3131;
+            --highlight-color: #ffd700;
+            --dark-bg: rgba(0, 0, 0, 0.7);
+            --card-bg: rgba(0, 0, 0, 0.4);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --success-bg: rgba(77, 221, 224, 0.2);
+            --error-bg: rgba(255, 49, 49, 0.2);
+            --transition: all 0.3s ease;
+        }
+
+        /* Background components */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .video-background video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            filter: blur(5px) brightness(0.4);
+            object-fit: cover;
+        }
+
+        .static-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-color: #000;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('concert-background.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Base styles */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark-bg);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header and navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            width: 100%;
+            background: linear-gradient(135deg, rgba(77, 221, 224, 0.1), rgba(210, 105, 230, 0.1));
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--highlight-color);
+            font-weight: 900;
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .circle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid transparent;
+        }
+
+        .circle-outer {
+            border-color: var(--secondary-color);
+            animation: rotate 8s linear infinite;
+        }
+
+        .circle-middle {
+            border-color: var(--accent-color);
+            transform: scale(0.85);
+            animation: rotate 6s linear infinite reverse;
+        }
+
+        .circle-inner {
+            border-color: var(--primary-color);
+            transform: scale(0.7);
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .circle-middle {
+            animation-name: rotate-middle;
+        }
+
+        @keyframes rotate-middle {
+            from { transform: rotate(0deg) scale(0.85); }
+            to { transform: rotate(-360deg) scale(0.85); }
+        }
+
+        .circle-inner {
+            animation-name: rotate-inner;
+        }
+
+        @keyframes rotate-inner {
+            from { transform: rotate(0deg) scale(0.7); }
+            to { transform: rotate(360deg) scale(0.7); }
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: var(--primary-color);
+            transition: var(--transition);
+            transform: translateX(-50%);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        nav a.active {
+            color: var(--highlight-color);
+        }
+
+        nav a.active::after {
+            background: var(--highlight-color);
+            width: 100%;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary-color), #52bdfb, var(--secondary-color), var(--accent-color), var(--highlight-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        /* Events Container */
+        .events-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 40px 0;
+        }
+
+        .event-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-color: var(--primary-color);
+        }
+
+        .event-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .event-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .event-card:hover .event-image img {
+            transform: scale(1.05);
+        }
+
+        .event-details {
+            padding: 20px;
+        }
+
+        .event-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--highlight-color);
+        }
+
+        .event-meta {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .meta-item i {
+            margin-right: 5px;
+            color: var(--primary-color);
+        }
+
+        .event-description {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            opacity: 0;
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(77, 221, 224, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            margin-left: 10px;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-color);
+            color: #000;
+        }
+
+        /* Modal styles */
+        .event-detail-modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: var(--dark-bg);
+            margin: 5% auto;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 12px;
+            overflow: hidden;
+            animation: modalFade 0.4s;
+            border: 1px solid var(--primary-color);
+        }
+
+        @keyframes modalFade {
+            from {opacity: 0; transform: translateY(-30px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--accent-color);
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            padding: 0;
+            position: relative;
+        }
+
+        .modal-header img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .modal-title-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 30px 20px 20px;
+            color: white;
+        }
+
+        .modal-title-overlay h2 {
+            margin: 0;
+            font-size: 2rem;
+            color: var(--highlight-color);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-section {
+            margin-bottom: 25px;
+        }
+
+        .modal-section h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .modal-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), transparent);
+        }
+
+        .dates-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .date-item {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        .date-item:hover {
+            background-color: rgba(77, 221, 224, 0.1);
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .date-location {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--highlight-color);
+        }
+
+        .date-meta {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .venue-layout {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .venue-layout img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .venue-layout img:hover {
+            transform: scale(1.02);
+            border-color: var(--primary-color);
+        }
+
+        .join-community {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .join-community:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        .join-community h3 {
+            color: var(--highlight-color);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 4rem;
+            padding: 1rem 0;
+            color: rgba(255, 255, 255, 0.7);
+            border-top: 1px solid var(--border-color);
+            width: 100%;
+            font-size: 0.9rem;
+            background: linear-gradient(135deg, rgba(77, 221, 224, 0.1), rgba(210, 105, 230, 0.1));
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+                flex-direction: column;
+            }
+            
+            .events-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+            
+            .modal-header img {
+                height: 200px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            nav a {
+                display: block;
+                padding: 0.75rem;
+                text-align: center;
+                border-bottom: 1px solid var(--border-color);
+            }
+        }
+
+        /* Touch-Friendly Adjustments */
+        @media (pointer: coarse) {
+            nav a, .btn {
+                min-height: 48px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* Prefers reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .circle-outer, .circle-middle, .circle-inner {
+                animation: none;
+            }
+            
+            .btn::before {
+                display: none;
+            }
+            
+            * {
+                transition: none !important;
+            }
+        }
+
+        
+    header {
+    background-color: var(--bg-header);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: var(--spacing-md) 0;
+    position: relative;
+    width: 100%;
+    z-index: 100;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-fast);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.logo-container {
+    display: flex;
+    text-align: left;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    padding: var(--spacing-sm) 0;
+}
+
+.logo-container:hover {
+    transform: scale(1.05);
+}
+/* Background components */
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.video-background video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    filter: blur(5px) brightness(0.4);
+    object-fit: cover;
+}
+
+.static-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background-color: #000;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('concert-background.jpg');
+    background-size: cover;
+    background-position: center;
+}
+    </style>
+</head>
+<body>
+      <div class="static-background" aria-hidden="true"></div>
+    <div class="video-background" id="video-container" aria-hidden="true">
+        <video autoplay muted loop playsinline id="bg-video">
+            <source src="3.mp4" type="video/mp4">
+        </video>
+    </div>
+    <header>
+        <div class="header-container">
+            <div class="logo-container">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" class="svg-logo" role="img" aria-label="Concert Circle Logo">
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#4ddde0"/>
+                            <stop offset="50%" stop-color="#d269e6"/>
+                            <stop offset="100%" stop-color="#ff3131"/>
+                        </linearGradient>
+                        <filter id="dynamicGlow">
+                            <feGaussianBlur class="blur" stdDeviation="15" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <g transform="translate(800, 600)">
+                        <g id="circleGroup">
+                            <circle cx="0" cy="0" r="450" stroke="url(#logoGradient)" stroke-width="12" fill="none" opacity="0.6" filter="url(#dynamicGlow)">
+                                <animate attributeName="r" values="450;490;450" dur="4s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.6;0.4;0.6" dur="4s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="0" cy="0" r="360" stroke="url(#logoGradient)" stroke-width="12" fill="none" opacity="0.8" filter="url(#dynamicGlow)">
+                                <animate attributeName="r" values="360;400;360" dur="3s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.8;0.6;0.8" dur="3s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="0" cy="0" r="270" stroke="url(#logoGradient)" stroke-width="12" fill="none" opacity="1" filter="url(#dynamicGlow)">
+                                <animate attributeName="r" values="270;310;270" dur="2s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite"/>
+                            </circle>
+                        </g>
+                    </g>
+                </svg>
+                <span class="logo-text">Concert Circle</span>
+            </div>
+        <div class="container">
+            <h1>Music Events & Concerts 2025</h1>
+            <p class="subtitle">Experience the magic of live music across India</p>
+        </div>
+        </div>
+   </header>
+    <div class="container">
+        <div class="events-container">
+            <!-- Alan Walker Card -->
+            <div class="event-card">
+                <div class="event-image">
+                    <img src="2.jpg" alt="Alan Walker India Tour Pt-2 2025">
+                </div>
+                <div class="event-details">
+                    <h2 class="event-title">Alan Walker India Tour Pt-2 2025</h2>
+                    <div class="event-meta">
+                        <div class="meta-item">
+                            <i>🗓</i> Apr 17-20, 2025
+                        </div>
+                        <div class="meta-item">
+                            <i>🎭</i> EDM
+                        </div>
+                    </div>
+                    <p class="event-description">Hold on tight, India! Alan Walker's electrifying tour is crashing down like a sonic BOOM! Featuring hits like "Faded," "Alone," and more.</p>
+                    <a href="#alan-walker" class="btn show-details">View Details</a>
+                    <a href="#" class="btn btn-secondary">Get Tickets</a>
+                </div>
+            </div>
+
+            <!-- Arijit Singh Card -->
+            <div class="event-card">
+                <div class="event-image">
+                    <img src="a1.webp" alt="Arijit Singh India Tour 2025">
+                </div>
+                <div class="event-details">
+                    <h2 class="event-title">Arijit Singh India Tour 2025</h2>
+                    <div class="event-meta">
+                        <div class="meta-item">
+                            <i>🗓</i> Apr 19 - May 24, 2025
+                        </div>
+                        <div class="meta-item">
+                            <i>🎭</i> Music
+                        </div>
+                    </div>
+                    <p class="event-description">Experience the magic of Arijit Singh live as he brings his heartfelt melodies to cities across India with hits like "Channa Mereya" and "Tum Hi Ho".</p>
+                    <a href="#arijit-singh" class="btn show-details">View Details</a>
+                    <a href="#" class="btn btn-secondary">Get Tickets</a>
+                </div>
+            </div>
+
+            <!-- Travis Scott Card -->
+            <div class="event-card">
+                <div class="event-image">
+                    <img src="t1.webp" alt="Travis Scott: Circus Maximus India Tour">
+                </div>
+                <div class="event-details">
+                    <h2 class="event-title">Travis Scott: Circus Maximus India Tour</h2>
+                    <div class="event-meta">
+                        <div class="meta-item">
+                            <i>🗓</i> Oct 18-19, 2025
+                        </div>
+                        <div class="meta-item">
+                            <i>🎭</i> HipHop, Rap
+                        </div>
+                    </div>
+                    <p class="event-description">ASTROWORLD HAS LANDED IN DELHI! Travis Scott brings his earth-shattering live experience to India for the FIRST TIME EVER.</p>
+                    <a href="#travis-scott" class="btn show-details">View Details</a>
+                    <a href="#" class="btn btn-secondary">Get Tickets</a>
+                </div>
+            </div>
+
+            <!-- Guns N' Roses Card -->
+            <div class="event-card">
+                <div class="event-image">
+                    <img src="g1.avif" alt="Guns N' Roses India Tour">
+                </div>
+                <div class="event-details">
+                    <h2 class="event-title">Guns N' Roses India Tour 2025</h2>
+                    <div class="event-meta">
+                        <div class="meta-item">
+                            <i>🗓</i> May 17, 2025
+                        </div>
+                        <div class="meta-item">
+                            <i>🎭</i> Metal, Rock
+                        </div>
+                    </div>
+                    <p class="event-description">WELCOME TO THE JUNGLE, INDIA! The legendary Guns N' Roses, with Axl, Slash, and Duff BACK TOGETHER, are roaring into India in 2025!</p>
+                    <a href="#guns-n-roses" class="btn show-details">View Details</a>
+                    <a href="#" class="btn btn-secondary">Get Tickets</a>
+                </div>
+            </div>
+
+            <!-- Sanam Card -->
+            <div class="event-card">
+                <div class="event-image">
+                    <img src="s1.avif" alt="Sanam Live in Concert">
+                </div>
+                <div class="event-details">
+                    <h2 class="event-title">Sanam Live in Concert - Bengaluru</h2>
+                    <div class="event-meta">
+                        <div class="meta-item">
+                            <i>🗓</i> Apr 12, 2025
+                        </div>
+                        <div class="meta-item">
+                            <i>🎭</i> Bollywood, Indian Pop
+                        </div>
+                    </div>
+                    <p class="event-description">BENGALURU, ARE YOU READY TO JOURNEY THROUGH MELODY WITH SANAM? Experience hits like "Lag Jaa Gale" and "Sanam Mennu".</p>
+                    <a href="#sanam" class="btn show-details">View Details</a>
+                    <a href="#" class="btn btn-secondary">Get Tickets</a>
+                </div>
+            </div>
+
+            <!-- Himesh Reshammiya Card -->
+            <div class="event-card">
+                <div class="event-image">
+                    <img src="h1.avif" alt="Cap Mania Tour ft Himesh Reshammiya">
+                </div>
+                <div class="event-details">
+                    <h2 class="event-title">Cap Mania Tour ft Himesh Reshammiya</h2>
+                    <div class="event-meta">
+                        <div class="meta-item">
+                            <i>🗓</i> May 31 - Jul 19, 2025
+                        </div>
+                        <div class="meta-item">
+                            <i>🎭</i> Bollywood, Pop
+                        </div>
+                    </div>
+                    <p class="event-description">REMEMBER THOSE LATENIGHT DRIVES? From "Jhalak Dikhla Ja" to "Aashiq Banaya Aapne," experience Himesh's iconic hits live!</p>
+                    <a href="#himesh" class="btn show-details">View Details</a>
+                    <a href="#" class="btn btn-secondary">Get Tickets</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alan Walker Modal -->
+    <div id="alan-walker" class="event-detail-modal">
+        <span class="close-modal">&times;</span>
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="2.jpg" alt="Alan Walker Tour Banner">
+                <div class="modal-title-overlay">
+                    <h2>Alan Walker India Tour Pt-2 2025</h2>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3>About the Event</h3>
+                    <p>Hold on tight, India! Alan Walker's electrifying tour is crashing down like a sonic BOOM! Prepare to be swept away!</p>
+                    <p>Picture this: nights where "Faded" explodes into a million memories, where "Alone" becomes a massive, heart-pounding connection with thousands of fellow dreamers.</p>
+                    <p>This isn't just a show; it's your favorite playlist bursting into reality! Feel the haunting thrill of "Spectre" echoing through your soul, and when "Darkside" drops, you'll know – this is pure, raw energy!</p>
+                    <p>Get ready to step into a "Different World" with every beat, every drop, every soaring melody. Let "Tired" vanish, because these nights will supercharge your spirit, leaving you "Awake" in a dream you'll never want to leave.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Tour Dates</h3>
+                    <div class="dates-list">
+                        <div class="date-item">
+                            <div class="date-location">Guwahati</div>
+                            <div class="date-meta">Thu, 17 Apr 2025 • 4:00 PM</div>
+                            <div class="date-meta">Venue To Be Announced</div>
+                            <div class="price">₹2000 onwards</div>
+                            <a href="aguva.html" class="btn" style="margin-top: 10px; font-size: 0.8rem; padding: 8px 16px;">Get Tickets</a>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-location">Hyderabad</div>
+                            <div class="date-meta">Fri, 18 Apr 2025 • 4:00 PM</div>
+                            <div class="date-meta">Venue To Be Announced</div>
+                            <div class="price">₹1250 onwards</div>
+                            <a href="#" class="btn" style="margin-top: 10px; font-size: 0.8rem; padding: 8px 16px;">Get Tickets</a>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-location">Bhubaneswar</div>
+                            <div class="date-meta">Sat, 19 Apr 2025 • 4:00 PM</div>
+                            <div class="date-meta">Venue To Be Announced</div>
+                            <div class="price">₹1250 onwards</div>
+                            <a href="#" class="btn" style="margin-top: 10px; font-size: 0.8rem; padding: 8px 16px;">Get Tickets</a>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-location">Jaipur</div>
+                            <div class="date-meta">Sun, 20 Apr 2025 • 4:00 PM</div>
+                            <div class="date-meta">Venue To Be Announced</div>
+                            <div class="price">₹1000 onwards</div>
+                            <a href="#" class="btn" style="margin-top: 10px; font-size: 0.8rem; padding: 8px 16px;">Get Tickets</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Venue Layout</h3>
+                    <div class="venue-layout">
+                        <img src="4.avif" alt="Alan Walker Venue Layout">
+                    </div>
+                </div>
+                
+                <div class="join-community">
+                    <h3>PLUG INTO THE WALKERVERSE</h3>
+                    <p>Join the official Alan Walker Fan community</p>
+                    <a href="login.php" class="btn">Join the circle</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Arijit Singh Modal -->
+    <div id="arijit-singh" class="event-detail-modal">
+        <span class="close-modal">&times;</span>
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="a2.webp" alt="Arijit Singh Tour Banner">
+                <div class="modal-title-overlay">
+                    <h2>Arijit Singh India Tour 2025</h2>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3>About the Event</h3>
+                    <p>Experience the magic of Arijit Singh live as he brings his heartfelt melodies to cities across India!</p>
+                    <p>Feel your "Channa Mereya" moments come alive as the voice that touches millions performs his biggest hits on stage. From the soulful "Tum Hi Ho" to the energetic "Nashe Si Chadh Gayi," every song becomes a special memory when heard live.</p>
+                    <p>Join fellow music lovers as Arijit creates that special "Raabta" connection only his voice can deliver. Whether you're a die-hard fan or new to his music, this concert promises moments you'll treasure forever.</p>
+                    <p>Don't miss your chance to see India's beloved musical star perform live.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Tour Dates</h3>
+                    <div class="dates-list">
+                        <div class="date-item">
+                            <div class="date-location">Indore</div>
+                            <div class="date-meta">Sat, 19 Apr 2025 • 6:00 PM</div>
+                            <div class="date-meta">Venue: C21 ESTATE, Indore</div>
+                            <div class="price">₹6999 onwards</div>
+                            <a href="#" class="btn" style="margin-top: 10px; font-size: 0.8rem; padding: 8px 16px;">Get Tickets</a>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-location">Chennai</div>
+                            <div class="date-meta">Sun, 27 Apr 2025 • 6:30 PM</div>
+                            <div class="date-meta">Venue: YMCA Ground, Nandanam</div>
+                            <div class="price">₹5000 onwards</div>
+                            <a href="#" class="btn" style="margin-top: 10px; font-size: 0.8rem; padding: 8px 16px;">Get Tickets</a>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-location">Surat</div>
+                            <div class="date-meta">Sat, 24 May 2025 • 7:00 PM</div>
+                            <div class="date-meta">Venue: Khajod, C.B.Patel Cricket Stadium Parking</div>
+                            <div class="price">Coming Soon</div>
+                            <a href="#" class="btn" style="margin-top: 10px; font-size: 0.8rem; padding: 8px 16px;">Notify Me</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Venue Layout</h3>
+                    <div class="venue-layout">
+                        <img src="a3.webp" alt="Arijit Singh Venue Layout">
+                    </div>
+                </div>
+                
+                <div class="join-community">
+                    <h3>LET THE MELODIES UNITE YOU</h3>
+                    <p>Join the official Arijit Singh Fan community</p>
+                    <a href="#" class="btn">Join the circle</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Travis Scott Modal -->
+    <div id="travis-scott" class="event-detail-modal">
+        <span class="close-modal">&times;</span>
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="t2.webp" alt="Travis Scott Tour Banner">
+                <div class="modal-title-overlay">
+                    <h2>Travis Scott: Circus Maximus India Tour 2025</h2>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3>About the Event</h3>
+                    <p>ASTROWORLD HAS LANDED IN DELHI!</p>
+                    <p>You've heard the ragers, you know the anthems. From the depths of UTOPIA to the heights of ASTROWORLD, Travis Scott, the one and only, is bringing his earth-shattering live experience to India for the FIRST. TIME. EVER.</p>
+                    <p>Get ready to lose your minds as La Flame ignites the stage with the energy that makes stadiums shake. You'll feel like you've stepped into another dimension.</p>
+                    <p>The diamond-certified, GRAMMY-nominated architect of sound, the mastermind behind the biggest hip-hop album of '23 UTOPIA, you know the vibes!, is ready to make history.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Tour Dates</h3>
+                    <div class="dates-list">
+                        <div class="date-item">
+                            <div class="date-location">Delhi - Day 1</div>
+                            <div class="date-meta">Sat, 18 Oct 2025 • 5:00 PM</div>
+                            <div class="date-meta">Venue: Jawaharlal Nehru Stadium</div>
+                            <div class="price">₹3500 onwards</div>
+                            <a href="#" class="btn" style="margin-top: 10px; font-size: 0.8rem; padding: 8px 16px;">Get Tickets</a>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-location">Delhi - Day 2</div>
+                            <div class="date-meta">Sun, 19 Oct 2025 • 5:00 PM</div>
+                            <div class="date-meta">Venue: Jawaharlal Nehru Stadium</div>
+                            <div class="price">₹3500 onwards</div>
+                            <a href="#" class="btn" style="margin-top: 10px; font-size: 0.8rem; padding: 8px 16px;">Get Tickets</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Venue Layout</h3>
+                    <div class="venue-layout">
+                        <img src="t3.avif" alt="Travis Scott Venue Layout">
+                    </div>
+                </div>
+                
+                <div class="join-community">
+                    <h3>YOU'RE EITHER IN, OR YOU'RE OUT</h3>
+                    <p>Join the official Travis Scott Fan community</p>
+                    <a href="#" class="btn">Join the circle</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Guns N' Roses Modal -->
+    <div id="guns-n-roses" class="event-detail-modal">
+        <span class="close-modal">&times;</span>
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="/api/placeholder/800/400" alt="Guns N' Roses Tour Banner">
+                <div class="modal-title-overlay">
+                    <h2>Guns N' Roses India Tour 2025</h2>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3>About the Event</h3>
+                    <p>WELCOME TO THE JUNGLE, INDIA! The legendary Guns N' Roses, with Axl, Slash, and Duff BACK TOGETHER, are roaring into India in 2025!</p>
+                    <p>Get ready for a whole new level of rock 'n' roll thunder! The full original force of Guns N' Roses is hitting the stage as part of their Asia tour. Prepare for a night of iconic anthems and the raw energy that cemented their place in music history.</p>
+                    <p>This isn't just a concert; it's a chance to witness rock royalty in their ultimate form. Don't let this "November Rain" of opportunity pass you by!</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Tour Dates</h3>
+                    <div class="dates-list">
+                        <div class="date-item">
+                            <div class="date-location">Mumbai</div>
+                            <div class="date-meta">Sat, 17 May 2025 • 3:00 PM</div>
+                            <div class="date-meta">Venue: Mahalaxmi Race course</div>
+                            <div class="price">₹6499 onwards</div>
+                            <a href="#" class="btn" style="margin-top: 10px; font-size: 0.8rem; padding: 8px 16px;">Get Tickets</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Venue Layout</h3>
+                    <div class="venue-layout">
+                        <img src="/api/placeholder/600/400" alt="Guns N' Roses Venue Layout">
+                    </div>
+                </div>
+                
+                <div class="join-community">
+                    <h3>WANNA GET CLOSER TO THE PARADISE CITY OF GNR FANS?</h3>
+                    <p>Join the official Guns N' Roses India community</p>
+                    <a href="#" class="btn">Join the circle</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sanam Modal -->
+    <div id="sanam" class="event-detail-modal">
+        <span class="close-modal">&times;</span>
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="/api/placeholder/800/400" alt="Sanam Concert Banner">
+                <div class="modal-title-overlay">
+                    <h2>Sanam Live in Concert - Bengaluru</h2>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3>About the Event</h3>
+                    <p>BENGALURU, ARE YOU READY TO JOURNEY THROUGH MELODY WITH SANAM?</p>
+                    <p>From their YouTube beginnings, serenading hearts with classics like "Lag Jaa Gale," to their original hits like "Sanam Mennu" topping the charts, SANAM has created a musical universe all their own. Now, Sanam Puri, Samar Puri, Venky S, and Keshav Dhanraj are bringing that magic live to Bengaluru!</p>
+                    <p>Get ready to experience the songs you've loved and shared, from the nostalgic "Kya Hua Tera Wada" to the deeply felt "Aur Iss Dil Mein," all performed with the energy and passion that defines SANAM's incredible connection with their audience. This isn't just a concert; it'sa celebration of the music that binds us.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Tour Dates</h3>
+                    <div class="dates-list">
+                        <div class="date-item">
+                            <div class="date-location">Bengaluru</div>
+                            <div class="date-meta">Sat, 12 Apr 2025 • 7:00 PM</div>
+                            <div class="date-meta">Venue: Phoenix Market city, Bangalore</div>
+                            <div class="price">₹1799 onwards</div>
+                            <a href="#" class="btn" style="margin-top: 10px; font-size: 0.8rem; padding: 8px 16px;">Get Tickets</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Venue Layout</h3>
+                    <div class="venue-layout">
+                        <img src="/api/placeholder/600/400" alt="Sanam Venue Layout">
+                    </div>
+                </div>
+                
+                <div class="join-community">
+                    <h3>FEEL THE "MUSAFIR" SPIRIT?</h3>
+                    <p>Join the official SANAM community</p>
+                    <a href="#" class="btn">Join the circle</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Himesh Reshammiya Modal -->
+    <div id="himesh" class="event-detail-modal">
+        <span class="close-modal">&times;</span>
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="/api/placeholder/800/400" alt="Himesh Reshammiya Tour Banner">
+                <div class="modal-title-overlay">
+                    <h2>Cap Mania Tour ft Himesh Reshammiya</h2>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3>About the Event</h3>
+                    <p>REMEMBER THOSE LATENIGHT DRIVES? They had a soundtrack: HIMESH RESHAMMIYA!</p>
+                    <p>His music isn't just heard; it's felt. Now, get ready to relive those memories LIVE as Himesh Reshammiya brings his Cap Mania Tour with signature energy and iconic hits to the stage.</p>
+                    <p>From the electrifying "Jhalak Dikhla Ja" to the passionate "Aashiq Banaya Aapne," the soulful "Dil Ke Taj Mahal Mein" to the sizzling "Tandoori Nights," expect a non-stop barrage of chart-toppers. This isn't just nostalgia; it's a chance to re-experience the emotions woven into every beat. The night is going to be a celebration of music that's etched in our hearts.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Tour Dates</h3>
+                    <div class="dates-list">
+                        <div class="date-item">
+                            <div class="date-location">Mumbai</div>
+                            <div class="date-meta">Sat, 31 May 2025 • 6:00 PM</div>
+                            <div class="date-meta">Venue: Yet to be announced</div>
+                            <div class="price">Get Notified</div>
+                            <a href="#" class="btn" style="margin-top: 10px; font-size: 0.8rem; padding: 8px 16px;">Get Tickets</a>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-location">Delhi NCR</div>
+                            <div class="date-meta">Sat, 19 Jul 2025 • 6:00 PM</div>
+                            <div class="date-meta">Venue: Yet to be announced</div>
+                            <div class="price">Get Notified</div>
+                            <a href="#" class="btn" style="margin-top: 10px; font-size: 0.8rem; padding: 8px 16px;">Get Tickets</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Venue Layout</h3>
+                    <div class="venue-layout">
+                        <img src="/api/placeholder/600/400" alt="Himesh Reshammiya Venue Layout">
+                    </div>
+                </div>
+                
+                <div class="join-community">
+                    <h3>WANT TO KEEP THE "TERAA SURROOR" ALIVE?</h3>
+                    <p>Join the official Himesh Reshammiya fan community</p>
+                    <a href="#" class="btn">Join the circle</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Music Events & Concerts. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Modal functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const detailBtns = document.querySelectorAll('.show-details');
+            const modals = document.querySelectorAll('.event-detail-modal');
+            const closeBtns = document.querySelectorAll('.close-modal');
+            
+            // Open modal when "View Details" is clicked
+            detailBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const modalId = this.getAttribute('href').substring(1);
+                    document.getElementById(modalId).style.display = 'block';
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+                });
+            });
+            
+            // Close modal when X is clicked
+            closeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    modals.forEach(modal => {
+                        modal.style.display = 'none';
+                    });
+                    document.body.style.overflow = 'auto'; // Re-enable scrolling
+                });
+            });
+            
+            // Close modal when clicking outside of content
+            window.addEventListener('click', function(e) {
+                modals.forEach(modal => {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                        document.body.style.overflow = 'auto'; // Re-enable scrolling
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

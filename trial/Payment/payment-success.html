@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="LOGO for website (circular).png" type="image/x-icon">
+    <link rel="shortcut icon" href="LOGO for website (circular).png" type="image/x-icon">
+    <link rel="icon" type="image/x-icon" href="LOGO for website (circular).png">
+  <title>Payment Successful</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    .success-icon {
+      font-size: 80px;
+      color: #4CAF50;
+      margin-bottom: 20px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #333;
+      margin-bottom: 20px;
+      font-weight: 300;
+    }
+
+    .payment-details {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      text-align: left;
+      border-left: 4px solid #4CAF50;
+    }
+
+    .payment-details p {
+      margin: 12px 0;
+      font-size: 1.1em;
+      color: #555;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .payment-details strong {
+      color: #333;
+      font-weight: 600;
+      min-width: 140px;
+    }
+
+    .payment-details span {
+      flex: 1;
+      text-align: right;
+      font-weight: 500;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .download-button, .view-button {
+      display: inline-block;
+      padding: 15px 30px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 1.1em;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      min-width: 150px;
+    }
+
+    .download-button {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+    }
+
+    .download-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+    }
+
+    .download-button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .view-button {
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+      color: white;
+    }
+
+    .view-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(33, 150, 243, 0.3);
+    }
+
+    .view-button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .back-button {
+      display: inline-block;
+      margin-top: 20px;
+      color: #4CAF50;
+      text-decoration: none;
+      font-size: 1em;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .back-button:hover {
+      color: #45a049;
+    }
+
+    .error-message {
+      background: #ffebee;
+      color: #c62828;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+      border-left: 4px solid #f44336;
+      display: none;
+    }
+
+    .success-message {
+      background: #e8f5e8;
+      color: #2e7d32;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+      border-left: 4px solid #4caf50;
+      display: none;
+    }
+
+    .loading {
+      color: #666;
+      font-style: italic;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .status-success { background-color: #4CAF50; }
+    .status-error { background-color: #f44336; }
+    .status-loading { background-color: #ff9800; animation: pulse 1.5s infinite; }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 20px; }
+      h1 { font-size: 2em; }
+      .payment-details p { font-size: 1em; flex-direction: column; align-items: flex-start; gap: 5px; }
+      .payment-details span { text-align: left; }
+      .button-group { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="success-icon">✅</div>
+    <h1>Payment Successful!</h1>
+    <p>Thank you for your payment. Here are the details:</p>
+
+    <div class="payment-details">
+      <p><strong>Order ID:</strong> <span id="orderId" class="loading">Loading...</span></p>
+      <p><strong>Transaction ID:</strong> <span id="transactionId" class="loading">Loading...</span></p>
+      <p><strong>Amount:</strong> <span id="amount" class="loading">Loading...</span></p>
+      <p><strong>Payment Method:</strong> <span id="paymentMethod" class="loading">Loading...</span></p>
+      <p><strong>Payment Date:</strong> <span id="paymentDate" class="loading">Loading...</span></p>
+      <p><strong>Receipt Status:</strong> <span id="receiptStatus"><span class="status-indicator status-loading"></span>Checking...</span></p>
+    </div>
+
+    <div class="error-message" id="errorMessage"></div>
+    <div class="success-message" id="successMessage"></div>
+
+    <div class="button-group">
+      <button class="view-button" id="viewReceipt" disabled>View Receipt</button>
+      <button class="download-button" id="downloadReceipt" disabled>Download Receipt</button>
+    </div>
+
+    <a href="index.php" class="back-button">Back to Home</a>
+  </div>
+
+  <script>
+    // Configuration - For standalone operation
+    const CONFIG = {
+      enableDebug: false, // Disabled debug mode
+      standalone: true,
+      maxRetries: 3,
+      retryDelay: 1000
+    };
+
+    function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name) || '';
+    }
+
+    function formatCurrency(amount) {
+      const amt = parseFloat(amount);
+      return isNaN(amt) ? '₹0.00' : `₹${amt.toFixed(2)}`;
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return new Date().toLocaleString('en-IN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      
+      const date = new Date(dateStr);
+      return isNaN(date.getTime()) ? new Date().toLocaleString('en-IN') : date.toLocaleString('en-IN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    }
+
+    function showError(message, details = '') {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.innerHTML = `
+        <strong>Error:</strong> ${message}
+        ${details ? `<br><small>Details: ${details}</small>` : ''}
+      `;
+      errorDiv.style.display = 'block';
+      hideSuccess();
+    }
+
+    function showSuccess(message) {
+      const successDiv = document.getElementById('successMessage');
+      successDiv.innerHTML = `<strong>Success:</strong> ${message}`;
+      successDiv.style.display = 'block';
+      hideError();
+    }
+
+    function hideError() {
+      document.getElementById('errorMessage').style.display = 'none';
+    }
+
+    function hideSuccess() {
+      document.getElementById('successMessage').style.display = 'none';
+    }
+
+    function updateReceiptStatus(status, message) {
+      const statusElement = document.getElementById('receiptStatus');
+      const statusClass = status === 'success' ? 'status-success' : 
+                         status === 'error' ? 'status-error' : 'status-loading';
+      statusElement.innerHTML = `<span class="status-indicator ${statusClass}"></span>${message}`;
+    }
+
+    function updatePaymentDetails() {
+      const orderId = getUrlParameter('order_id') || 'N/A';
+      const transactionId = getUrlParameter('transaction_id') || orderId;
+      const amount = getUrlParameter('amount') || '0.00';
+      const paymentMethod = getUrlParameter('payment_method') || 'N/A';
+      const paymentDate = getUrlParameter('payment_date') || new Date().toISOString();
+
+      document.getElementById('orderId').textContent = orderId;
+      document.getElementById('transactionId').textContent = transactionId;
+      document.getElementById('amount').textContent = formatCurrency(amount);
+      document.getElementById('paymentMethod').textContent = paymentMethod;
+      document.getElementById('paymentDate').textContent = formatDate(paymentDate);
+
+      // Store payment data for receipt generation
+      window.paymentData = {
+        orderId,
+        transactionId,
+        amount,
+        paymentMethod,
+        paymentDate
+      };
+    }
+
+    function generateReceiptHTML() {
+      const data = window.paymentData;
+      return `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Payment Receipt</title>
+          <style>
+            body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+            .receipt-header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #4CAF50; padding-bottom: 20px; }
+            .receipt-details { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+            .detail-row { display: flex; justify-content: space-between; margin: 10px 0; }
+            .detail-label { font-weight: bold; }
+            .receipt-footer { text-align: center; margin-top: 40px; color: #666; font-size: 14px; }
+            @media print { body { margin: 0; } }
+          </style>
+        </head>
+        <body>
+          <div class="receipt-header">
+            <h1>Payment Receipt</h1>
+            <p>Thank you for your payment</p>
+          </div>
+          <div class="receipt-details">
+            <div class="detail-row">
+              <span class="detail-label">Order ID:</span>
+              <span>${data.orderId}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Transaction ID:</span>
+              <span>${data.transactionId}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Amount:</span>
+              <span>${formatCurrency(data.amount)}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Payment Method:</span>
+              <span>${data.paymentMethod}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Payment Date:</span>
+              <span>${formatDate(data.paymentDate)}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Status:</span>
+              <span style="color: #4CAF50; font-weight: bold;">Successful</span>
+            </div>
+          </div>
+          <div class="receipt-footer">
+            <p>This is a computer-generated receipt and does not require a signature.</p>
+            <p>Generated on: ${new Date().toLocaleString('en-IN')}</p>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    async function checkReceiptAvailability() {
+      if (CONFIG.standalone) {
+        // For standalone operation, always enable buttons
+        updateReceiptStatus('success', 'Receipt available');
+        enableButtons();
+        showSuccess('Receipt is ready for viewing and download');
+        return true;
+      } else {
+        // Original PHP endpoint checking logic would go here
+        updateReceiptStatus('error', 'Receipt system not configured');
+        showError('Receipt backend not configured. Enable standalone mode or set up PHP backend.');
+        return false;
+      }
+    }
+
+    function enableButtons() {
+      const viewButton = document.getElementById('viewReceipt');
+      const downloadButton = document.getElementById('downloadReceipt');
+      
+      viewButton.disabled = false;
+      downloadButton.disabled = false;
+    }
+
+    async function viewReceipt() {
+      try {
+        const receiptHTML = generateReceiptHTML();
+        const newWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+        
+        if (newWindow) {
+          newWindow.document.write(receiptHTML);
+          newWindow.document.close();
+          showSuccess('Receipt opened in new window');
+        } else {
+          throw new Error('Popup blocked');
+        }
+      } catch (error) {
+        showError('Unable to open receipt window', 'Please allow popups for this site');
+      }
+    }
+
+    async function downloadReceipt() {
+      try {
+        updateReceiptStatus('loading', 'Generating receipt...');
+        
+        const receiptHTML = generateReceiptHTML();
+        const blob = new Blob([receiptHTML], { type: 'text/html' });
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        
+        link.href = downloadUrl;
+        link.download = `receipt_${window.paymentData.orderId}_${new Date().getTime()}.html`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        window.URL.revokeObjectURL(downloadUrl);
+        
+        updateReceiptStatus('success', 'Receipt downloaded successfully');
+        showSuccess('Receipt downloaded as HTML file (can be converted to PDF using browser print)');
+        
+      } catch (error) {
+        updateReceiptStatus('error', 'Download failed');
+        showError('Failed to download receipt', error.message);
+      }
+    }
+
+    // Initialize the page
+    async function initializePage() {
+      updatePaymentDetails();
+      
+      // Add event listeners
+      document.getElementById('viewReceipt').addEventListener('click', viewReceipt);
+      document.getElementById('downloadReceipt').addEventListener('click', downloadReceipt);
+      
+      // Check for receipt availability
+      await checkReceiptAvailability();
+    }
+
+    // Auto-initialize when page loads
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializePage);
+    } else {
+      initializePage();
+    }
+
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', function(event) {
+      if (event.ctrlKey && event.key === 'd') {
+        event.preventDefault();
+        if (!document.getElementById('downloadReceipt').disabled) {
+          downloadReceipt();
+        }
+      } else if (event.ctrlKey && event.key === 'r') {
+        event.preventDefault();
+        if (!document.getElementById('viewReceipt').disabled) {
+          viewReceipt();
+        }
+      }
+    });
+
+    // Handle browser back/forward navigation
+    window.addEventListener('popstate', function(event) {
+      // Refresh payment data if navigating back to this page
+      updatePaymentDetails();
+    });
+
+    // Add periodic check for receipt availability (every 30 seconds)
+    setInterval(async function() {
+      if (CONFIG.standalone) {
+        return; // No need to recheck in standalone mode
+      }
+      console.log('Rechecking receipt availability...');
+      await checkReceiptAvailability();
+    }, 30000);
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,387 @@
+/* Featured Slider Styles */
+.featured-carousel {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.featured-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.featured-slide.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.slide-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.slide-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.7) 100%
+    );
+    z-index: 2;
+}
+
+.featured-slide-content {
+    position: relative;
+    z-index: 3;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 5%;
+}
+
+.featured-slide-text {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.featured-title {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 900;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.8s forwards;
+}
+
+.gradient-text {
+    background: linear-gradient(45deg, #4ddde0, #52bdfb, #d269e6, #ff3131, #ffd700);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+}
+
+.featured-subtitle {
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 3rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.8s 0.2s forwards;
+}
+
+/* Benefits Section */
+.benefits-visual {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin: 3rem auto;
+    max-width: 1200px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.8s 0.4s forwards;
+}
+
+.benefit-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.benefit-item:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.benefit-icon {
+    width: 70px;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.benefit-icon i {
+    font-size: 1.8rem;
+    color: #fff;
+    position: relative;
+    z-index: 2;
+}
+
+.glow-effect {
+    position: relative;
+    overflow: hidden;
+}
+
+.glow-lines {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, #4ddde0, #52bdfb, #d269e6);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.benefit-item:hover .glow-lines {
+    opacity: 0.3;
+}
+
+.benefit-item span {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+/* Navigation Controls */
+.hero-arrows {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 4;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2rem;
+    pointer-events: none;
+}
+
+.hero-arrow {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    pointer-events: auto;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.hero-arrow:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.hero-arrow i {
+    color: white;
+    font-size: 1.2rem;
+}
+
+.hero-indicators {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    display: flex;
+    gap: 0.8rem;
+}
+
+.hero-indicator {
+    width: 30px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.hero-indicator.active {
+    background: #fff;
+    width: 50px;
+}
+
+/* CTA Button */
+.btn.slide-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    background: linear-gradient(45deg, #4ddde0, #52bdfb);
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.8s 0.6s forwards;
+}
+
+.btn.slide-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(82, 189, 251, 0.3);
+}
+
+.pulse-effect {
+    position: relative;
+}
+
+.pulse-effect::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: inherit;
+    border-radius: inherit;
+    animation: pulse 2s infinite;
+}
+
+/* Animations */
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    70% {
+        transform: scale(1.05);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+/* Slide Transitions */
+.slide-right {
+    animation: slideRight 0.5s ease forwards;
+}
+
+.slide-left {
+    animation: slideLeft 0.5s ease forwards;
+}
+
+@keyframes slideRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+    .benefits-visual {
+        gap: 1.5rem;
+        padding: 0 2rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .benefits-visual {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    .featured-title {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-arrows {
+        padding: 0 1rem;
+    }
+
+    .hero-arrow {
+        width: 40px;
+        height: 40px;
+    }
+
+    .featured-subtitle {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .benefit-item {
+        padding: 1rem;
+    }
+
+    .benefit-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .btn.slide-btn {
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .benefits-visual {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .featured-slide-content {
+        padding: 0 1rem;
+    }
+
+    .hero-indicators {
+        bottom: 1rem;
+    }
+
+    .hero-indicator {
+        width: 25px;
+    }
+} 

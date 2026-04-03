@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Fare Calculator - INR</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subheading {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .calculator-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .input-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background-color: #f0f0f0;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .btn.active {
+            background-color: #6e8efb;
+            color: white;
+        }
+
+        .total-fare {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #6e8efb;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .fare-details {
+            flex-grow: 1;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .promo-section {
+            margin-top: 20px;
+        }
+
+        .promo-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .promo-input input {
+            flex: 1;
+        }
+
+        .promo-input button {
+            background-color: #6e8efb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .promo-input button:hover {
+            background-color: #5d7ce0;
+        }
+
+        .location-section {
+            margin-top: 20px;
+        }
+
+        .map-placeholder {
+            height: 200px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            margin-top: 10px;
+            background-image: url('/api/placeholder/400/300');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .loading {
+            position: relative;
+        }
+
+        .loading::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #6e8efb;
+        }
+
+        .discount-badge {
+            display: inline-block;
+            background-color: #ff6b6b;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-left: 10px;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Travel Fare Calculator</h1>
+            <p class="subheading">Calculate your journey cost based on distance and preferences</p>
+        </header>
+
+        <div class="calculator-container">
+            <section class="input-section" id="inputSection">
+                <div class="form-group">
+                    <label for="distance">Distance (kilometers)</label>
+                    <input type="range" id="distance" min="1" max="200" value="10" step="1">
+                    <div class="range-labels">
+                        <span>1 km</span>
+                        <span id="distanceValue">10 km</span>
+                        <span>200 km</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Vehicle Type</label>
+                    <div class="btn-group" id="vehicleType">
+                        <button class="btn active" data-value="standard">Standard</button>
+                        <button class="btn" data-value="premium">Premium</button>
+                        <button class="btn" data-value="luxury">Luxury</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Time of Travel</label>
+                    <div class="btn-group" id="timeOfDay">
+                        <button class="btn active" data-value="regular">Regular</button>
+                        <button class="btn" data-value="peak">Peak Hours</button>
+                        <button class="btn" data-value="night">Night</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Additional Options</label>
+                    <div class="btn-group" id="additionalOptions">
+                        <button class="btn" data-value="express">Express</button>
+                        <button class="btn" data-value="shared">Shared Ride</button>
+                        <button class="btn" data-value="priority">Priority</button>
+                    </div>
+                </div>
+
+                <div class="promo-section">
+                    <label for="promoCode">Promo Code</label>
+                    <div class="promo-input">
+                        <input type="text" id="promoCode" placeholder="Enter promo code">
+                        <button id="applyPromo">Apply</button>
+                    </div>
+                </div>
+
+                <div class="location-section">
+                    <label>Route Preview</label>
+                    <div class="map-placeholder" id="mapPreview"></div>
+                </div>
+            </section>
+
+            <section class="result-section" id="resultSection">
+                <h2>Your Fare Estimate</h2>
+                <div class="total-fare" id="totalFare">₹120</div>
+
+                <div class="fare-details">
+                    <div class="detail-item">
+                        <span>Base Fare</span>
+                        <span id="baseFare">₹50</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Distance Charge</span>
+                        <span id="distanceCharge">₹120</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Time Multiplier</span>
+                        <span id="timeMultiplier">x1.0</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Additional Charges</span>
+                        <span id="additionalCharges">₹0</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Discount</span>
+                        <span id="discount">-₹0</span>
+                    </div>
+                    <div class="detail-item">
+                        <span><strong>Final Price</strong></span>
+                        <span id="finalPrice"><strong>₹120</strong></span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const distanceInput = document.getElementById('distance');
+            const distanceValue = document.getElementById('distanceValue');
+            const vehicleTypeBtns = document.querySelectorAll('#vehicleType .btn');
+            const timeOfDayBtns = document.querySelectorAll('#timeOfDay .btn');
+            const additionalOptionBtns = document.querySelectorAll('#additionalOptions .btn');
+            const promoCodeInput = document.getElementById('promoCode');
+            const applyPromoBtn = document.getElementById('applyPromo');
+            const totalFareEl = document.getElementById('totalFare');
+            const baseFareEl = document.getElementById('baseFare');
+            const distanceChargeEl = document.getElementById('distanceCharge');
+            const timeMultiplierEl = document.getElementById('timeMultiplier');
+            const additionalChargesEl = document.getElementById('additionalCharges');
+            const discountEl = document.getElementById('discount');
+            const finalPriceEl = document.getElementById('finalPrice');
+            const inputSection = document.getElementById('inputSection');
+            const resultSection = document.getElementById('resultSection');
+            const mapPreview = document.getElementById('mapPreview');
+
+            // Fare configuration in INR
+            const fareConfig = {
+                vehicleTypes: {
+                    standard: { baseRate: 50, perKm: 12 },
+                    premium: { baseRate: 80, perKm: 18 },
+                    luxury: { baseRate: 120, perKm: 25 }
+                },
+                timeMultipliers: {
+                    regular: 1,
+                    peak: 1.5,
+                    night: 1.25
+                },
+                additionalOptions: {
+                    express: 50,
+                    shared: -30,
+                    priority: 80
+                },
+                distanceTiers: [
+                    { range: 10, discount: 0 },
+                    { range: 25, discount: 0.05 },
+                    { range: 50, discount: 0.1 },
+                    { range: 100, discount: 0.15 },
+                    { range: Infinity, discount: 0.2 }
+                ],
+                promoCodes: {
+                    'NEWUSER': 0.15,
+                    'WEEKEND': 0.1,
+                    'HOLIDAY': 0.2,
+                    'FIRSTRIDE': 0.25
+                }
+            };
+
+            // Current selections
+            let currentState = {
+                distance: 10,
+                vehicleType: 'standard',
+                timeOfDay: 'regular',
+                additionalOptions: [],
+                promoCode: '',
+                promoDiscount: 0
+            };
+
+            // Update distance display
+            distanceInput.addEventListener('input', function() {
+                distanceValue.textContent = `${this.value} km`;
+                currentState.distance = parseInt(this.value);
+                calculateFare();
+            });
+
+            // Button selection handler
+            function setupButtonGroup(buttons, singleSelect = true) {
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const value = this.getAttribute('data-value');
+                        
+                        if (singleSelect) {
+                            // Remove active class from all buttons in group
+                            buttons.forEach(b => b.classList.remove('active'));
+                            // Add active class to clicked button
+                            this.classList.add('active');
+                            
+                            // Update state based on button group
+                            if (this.parentElement.id === 'vehicleType') {
+                                currentState.vehicleType = value;
+                            } else if (this.parentElement.id === 'timeOfDay') {
+                                currentState.timeOfDay = value;
+                            }
+                        } else {
+                            // Toggle active class for multi-select groups
+                            this.classList.toggle('active');
+                            
+                            // Update additionalOptions array
+                            if (this.classList.contains('active')) {
+                                currentState.additionalOptions.push(value);
+                            } else {
+                                currentState.additionalOptions = currentState.additionalOptions.filter(
+                                    option => option !== value
+                                );
+                            }
+                        }
+                        
+                        calculateFare();
+                    });
+                });
+            }
+
+            // Setup button groups
+            setupButtonGroup(vehicleTypeBtns, true);
+            setupButtonGroup(timeOfDayBtns, true);
+            setupButtonGroup(additionalOptionBtns, false);
+
+            // Promo code handler
+            applyPromoBtn.addEventListener('click', function() {
+                const code = promoCodeInput.value.trim().toUpperCase();
+                
+                // Show loading state
+                this.textContent = 'Checking...';
+                
+                // Simulate API call
+                setTimeout(() => {
+                    if (fareConfig.promoCodes[code]) {
+                        currentState.promoCode = code;
+                        currentState.promoDiscount = fareConfig.promoCodes[code];
+                        this.textContent = 'Applied ✓';
+                        this.style.backgroundColor = '#4CAF50';
+                    } else {
+                        currentState.promoCode = '';
+                        currentState.promoDiscount = 0;
+                        this.textContent = 'Invalid Code';
+                        this.style.backgroundColor = '#ff6b6b';
+                        
+                        // Reset button after delay
+                        setTimeout(() => {
+                            this.textContent = 'Apply';
+                            this.style.backgroundColor = '#6e8efb';
+                        }, 2000);
+                    }
+                    
+                    calculateFare();
+                }, 800);
+            });
+
+            // Main fare calculation function
+            function calculateFare() {
+                // Show loading state
+                inputSection.classList.add('loading');
+                resultSection.classList.add('loading');
+                
+                // Simulate calculation delay
+                setTimeout(() => {
+                    // Get base rate and per-km rate for selected vehicle
+                    const { baseRate, perKm } = fareConfig.vehicleTypes[currentState.vehicleType];
+                    
+                    // Get time multiplier
+                    const timeMultiplier = fareConfig.timeMultipliers[currentState.timeOfDay];
+                    
+                    // Calculate distance tier discount
+                    const tier = fareConfig.distanceTiers.find(tier => currentState.distance <= tier.range);
+                    const distanceDiscount = tier ? tier.discount : 0;
+                    
+                    // Calculate additional options cost
+                    let additionalCost = 0;
+                    currentState.additionalOptions.forEach(option => {
+                        additionalCost += fareConfig.additionalOptions[option];
+                    });
+                    
+                    // Calculate base distance charge with distance tier discount
+                    const distanceCharge = currentState.distance * perKm * (1 - distanceDiscount);
+                    
+                    // Apply time multiplier
+                    const timeAdjustedCharge = distanceCharge * timeMultiplier;
+                    
+                    // Calculate subtotal
+                    const subtotal = baseRate + timeAdjustedCharge + additionalCost;
+                    
+                    // Apply promo discount if valid
+                    const promoDiscountAmount = subtotal * currentState.promoDiscount;
+                    
+                    // Calculate final price
+                    const finalPrice = subtotal - promoDiscountAmount;
+                    
+                    // Update UI - using INR symbol (₹) and rounding to whole rupees
+                    baseFareEl.textContent = `₹${Math.round(baseRate)}`;
+                    
+                    // Show distance tier discount if applicable
+                    if (distanceDiscount > 0) {
+                        distanceChargeEl.innerHTML = `₹${Math.round(distanceCharge)} <span class="discount-badge">-${(distanceDiscount * 100)}% off</span>`;
+                    } else {
+                        distanceChargeEl.textContent = `₹${Math.round(distanceCharge)}`;
+                    }
+                    
+                    timeMultiplierEl.textContent = `x${timeMultiplier.toFixed(1)}`;
+                    additionalChargesEl.textContent = `₹${Math.round(additionalCost)}`;
+                    
+                    if (promoDiscountAmount > 0) {
+                        discountEl.innerHTML = `-₹${Math.round(promoDiscountAmount)} <span class="discount-badge">${currentState.promoCode}</span>`;
+                    } else {
+                        discountEl.textContent = `-₹0`;
+                    }
+                    
+                    finalPriceEl.innerHTML = `<strong>₹${Math.round(finalPrice)}</strong>`;
+                    totalFareEl.textContent = `₹${Math.round(finalPrice)}`;
+                    
+                    // Update map preview
+                    updateMapPreview(currentState.distance);
+                    
+                    // Remove loading state
+                    inputSection.classList.remove('loading');
+                    resultSection.classList.remove('loading');
+                }, 500);
+            }
+
+            // Simulated map preview updater
+            function updateMapPreview(distance) {
+                // In a real application, this would update a map with actual route
+                // Here we're just showing a placeholder with different text based on distance
+                let routeDescription;
+                
+                if (distance < 10) {
+                    routeDescription = "Short Urban Route";
+                } else if (distance < 30) {
+                    routeDescription = "Medium Urban Route";
+                } else if (distance < 80) {
+                    routeDescription = "Intercity Route";
+                } else {
+                    routeDescription = "Long Distance Route";
+                }
+                
+                mapPreview.innerHTML = `<div style="text-align: center;">
+                    <div style="font-weight: bold; font-size: 1.2rem;">${routeDescription}</div>
+                    <div>${distance} kilometers</div>
+                    <div style="font-size: 0.8rem; margin-top: 5px;">Est. travel time: ${Math.round(distance * 1.2)} minutes</div>
+                </div>`;
+            }
+
+            // Initialize with default values
+            calculateFare();
+        });
+    </script>
+</body>
+</html>

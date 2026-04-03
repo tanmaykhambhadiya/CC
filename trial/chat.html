@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="LOGO for website (circular).png" type="image/x-icon">
+    <link rel="shortcut icon" href="LOGO for website (circular).png" type="image/x-icon">
+    <title>Concert-Premio Group Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4ddde0;
+            --secondary-color: #d269e6;
+            --accent-color: #ff3131;
+            --highlight-color: #ffd700;
+            --dark-bg: rgba(0, 0, 0, 0.7);
+            --card-bg: rgba(0, 0, 0, 0.4);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --success-bg: rgba(77, 221, 224, 0.2);
+            --error-bg: rgba(255, 49, 49, 0.2);
+            --transition: all 0.3s ease;
+            --container-width: 1400px;
+            --spacing-xs: 5px;
+            --spacing-sm: 10px;
+            --spacing-md: 15px;
+            --spacing-lg: 20px;
+            --spacing-xl: 30px;
+            --spacing-xxl: 50px;
+        }
+
+        /* Background components */
+        .static-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-color: #000;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Base styles */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark-bg);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            height: 90vh;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .container:hover {
+            box-shadow: 0 15px 40px rgba(77, 221, 224, 0.2);
+            transform: translateY(-5px);
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary-color), #52bdfb, var(--secondary-color), var(--accent-color), var(--highlight-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+
+        .gradient-text::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), #52bdfb, var(--secondary-color), var(--accent-color), var(--highlight-color));
+            border-radius: 2px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Auth container */
+        .auth-container {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-form {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .auth-form:hover {
+            box-shadow: 0 15px 40px rgba(77, 221, 224, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .auth-tab.active {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .auth-tab:first-child {
+            border-radius: 4px 0 0 4px;
+        }
+
+        .auth-tab:last-child {
+            border-radius: 0 4px 4px 0;
+        }
+
+        .auth-content {
+            display: none;
+        }
+
+        .auth-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--highlight-color);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(77, 221, 224, 0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(77, 221, 224, 0.3);
+        }
+
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--input-bg);
+            color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 15px;
+        }
+
+        .google-btn:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .google-icon {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .or-divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .or-divider::before,
+        .or-divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .or-divider-text {
+            padding: 0 10px;
+        }
+
+        .error-message {
+            color: var(--accent-color);
+            margin-top: 10px;
+            text-align: center;
+            background-color: var(--error-bg);
+            padding: 8px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .error-message:not(:empty) {
+            display: block;
+        }
+
+        /* Chat container */
+        .chat-container {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 15px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--secondary-color), var(--highlight-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            overflow: hidden;
+            border: 2px solid white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .users-online {
+            margin-left: 10px;
+            font-size: 0.8rem;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 3px 8px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .logout-btn {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 700;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: var(--dark-bg);
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            word-break: break-word;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background-color: var(--input-bg);
+            border-bottom-left-radius: 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-bottom-right-radius: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .message.system {
+            align-self: center;
+            background-color: rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            max-width: 90%;
+            text-align: center;
+            color: var(--highlight-color);
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+
+        .message-info {
+            font-size: 12px;
+            margin-top: 5px;
+            opacity: 0.7;
+        }
+
+        .chat-input {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid var(--border-color);
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 20px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 16px;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .chat-input input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(77, 221, 224, 0.2);
+        }
+
+        .send-btn {
+            padding: 0 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 700;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .send-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+
+        .send-btn:hover::before {
+            left: 100%;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(77, 221, 224, 0.3);
+        }
+        
+        /* Online users list */
+        .online-users-container {
+            position: absolute;
+            right: 15px;
+            top: 70px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--primary-color);
+            padding: 10px;
+            width: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 10;
+        }
+        
+        .online-users-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+            color: var(--highlight-color);
+        }
+        
+        .online-users-list {
+            list-style: none;
+        }
+        
+        .online-user {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            transition: var(--transition);
+        }
+        
+        .online-user:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .online-user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--secondary-color), var(--highlight-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+        
+        .online-user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .online-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+            margin-left: auto;
+        }
+
+        /* Group info */
+        .group-info {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 10px 15px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--highlight-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                height: 100vh;
+                max-width: 100%;
+                border-radius: 0;
+                border: none;
+            }
+            
+            body {
+                font-size: 16px;
+                line-height: 1.5;
+                padding: 0;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 1rem;
+            }
+
+            p {
+                font-size: 1rem;
+                max-width: 100%;
+            }
+
+            .auth-form {
+                padding: 1.5rem;
+                max-width: 90%;
+            }
+            
+            .online-users-container {
+                position: fixed;
+                bottom: 70px;
+                top: auto;
+                right: 10px;
+                width: 150px;
+            }
+        }
+
+        /* Touch-Friendly Adjustments */
+        @media (pointer: coarse) {
+            .btn, .google-btn, .logout-btn, .send-btn {
+                min-height: 48px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* Prefers reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .btn::before, .send-btn::before {
+                display: none;
+            }
+            
+            * {
+                transition: none !important;
+            }
+        }
+        .online-status-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #4CAF50;
+        margin-left: 5px;
+         }
+
+
+         .online-user {
+             display: flex;
+             align-items: center;
+             padding: 8px;
+             border-bottom: 1px solid #eee;
+         }
+         .online-user-avatar {
+             width: 30px;
+             height: 30px;
+             border-radius: 50%;
+             background-color: #3498db;
+             color: white;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             margin-right: 10px;
+             font-weight: bold;
+         }
+         .online-user-name {
+             flex: 1;
+         }
+         .no-users {
+             padding: 10px;
+             color: #777;
+             font-style: italic;
+         }
+    </style>
+</head>
+<body>
+    <div class="static-background"></div>
+    
+    <div class="container">
+        <!-- Authentication Container -->
+        <div class="auth-container" id="authContainer">
+            <h1 class="gradient-text">Concert-Premio</h1>
+            <p>Join our group chat to discuss concerts and share ticket info</p>
+            
+            <div class="auth-form">
+                <div class="auth-tabs">
+                    <div class="auth-tab active" data-tab="login">Login</div>
+                    <div class="auth-tab" data-tab="signup">Sign Up</div>
+                </div>
+                
+                <div class="auth-content active" id="loginContent">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password">
+                    </div>
+                    <button class="btn" id="loginBtn">Login</button>
+                    
+                    <div class="or-divider">
+                        <span class="or-divider-text">OR</span>
+                    </div>
+                    
+                    <button class="google-btn" id="googleLoginBtn">
+                        <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                        </svg>
+                        Sign in with Google
+                    </button>
+                    
+                    <div class="error-message" id="loginError"></div>
+                </div>
+                
+                <div class="auth-content" id="signupContent">
+                    <div class="form-group">
+                        <label for="signupName">Name</label>
+                        <input type="text" id="signupName" placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email</label>
+                        <input type="email" id="signupEmail" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" placeholder="Create a password">
+                    </div>
+                    <button class="btn" id="signupBtn">Sign Up</button>
+                    
+                    <div class="or-divider">
+                        <span class="or-divider-text">OR</span>
+                    </div>
+                    
+                    <button class="google-btn" id="googleSignupBtn">
+                        <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                        </svg>
+                        Sign up with Google
+                    </button>
+                    
+                    <div class="error-message" id="signupError"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chat Container -->
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-header">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar"></div>
+                    <div class="user-name" id="userName"></div>
+                    <div class="users-online" id="usersCount">0 online</div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
+            </div>
+            
+            <div class="group-info">
+                Concert-Premio Group Chat - Discuss upcoming shows and ticket offers!
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be dynamically added here -->
+            </div>
+            
+            <div class="chat-input">
+                <input type="text" id="messageInput" placeholder="Type a message...">
+                <button class="send-btn" id="sendBtn">Send</button>
+            </div>
+        </div>
+        
+        <!-- Online Users Container -->
+        <div class="online-users-container" id="onlineUsersContainer">
+            <div class="online-users-title">Online Users</div>
+            <ul class="online-users-list" id="onlineUsersList">
+                <!-- Online users will be listed here -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-app-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-auth-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-firestore-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-database-compat.min.js"></script>
+
+    <script>
+             // NOTE: In a production environment, these credentials should be properly secured
+        // and appropriate Firebase security rules should be implemented on the server side
+        const firebaseConfig = {
+            apiKey: "AIzaSyDDWsYOMydk6znez0Ptc7ZtdOihDriCoX0",
+            authDomain: "chats-69b00.firebaseapp.com",
+            databaseURL: "https://chats-69b00-default-rtdb.firebaseio.com",
+            projectId: "chats-69b00",
+            storageBucket: "chats-69b00.appspot.com",
+            messagingSenderId: "312624430633",
+            appId: "1:312624430633:web:7ee332f25658d510dca638",
+            measurementId: "G-B0NK55HM24"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        
+        // Initialize Firebase services
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const rtdb = firebase.database();
+        
+        // Configure Google Auth Provider
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+        
+        // Constants
+        const GROUP_ID = 'concert-premio-group'; // Single group for now, can be expanded to multiple groups
+        const MESSAGE_LIMIT = 100; // Limit for message history
+        
+        // Global variables to track displayed messages
+        let displayedMessageIds = new Set();
+        
+        // DOM Elements
+        const authContainer = document.getElementById('authContainer');
+        const chatContainer = document.getElementById('chatContainer');
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const loginContent = document.getElementById('loginContent');
+        const signupContent = document.getElementById('signupContent');
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const googleLoginBtn = document.getElementById('googleLoginBtn');
+        const googleSignupBtn = document.getElementById('googleSignupBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginEmail = document.getElementById('loginEmail');
+        const loginPassword = document.getElementById('loginPassword');
+        const signupName = document.getElementById('signupName');
+        const signupEmail = document.getElementById('signupEmail');
+        const signupPassword = document.getElementById('signupPassword');
+        const loginError = document.getElementById('loginError');
+        const signupError = document.getElementById('signupError');
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.getElementById('userName');
+        const usersCount = document.getElementById('usersCount');
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const onlineUsersContainer = document.getElementById('onlineUsersContainer');
+        const onlineUsersList = document.getElementById('onlineUsersList');
+        
+        
+        
+        // Global variables
+        let currentUser = null;
+        let messagesRef = null;
+        let usersRef = null;
+        let messageListener = null;
+        let usersListener = null;
+        
+        // Authentication tab switching
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                authTabs.forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.auth-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                const contentId = tab.dataset.tab === 'login' ? 'loginContent' : 'signupContent';
+                document.getElementById(contentId).classList.add('active');
+                
+                // Clear error messages
+                loginError.textContent = '';
+                signupError.textContent = '';
+            });
+        });
+        
+        // Login with email and password
+        loginBtn.addEventListener('click', async () => {
+            const email = loginEmail.value.trim();
+            const password = loginPassword.value.trim();
+            
+            if (!email || !password) {
+                loginError.textContent = 'Please enter both email and password';
+                return;
+            }
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                // Auth state change will handle the transition to chat
+                clearAuthFields();
+            } catch (error) {
+                loginError.textContent = getAuthErrorMessage(error);
+            }
+        });
+        
+        // Sign up with email and password
+        signupBtn.addEventListener('click', async () => {
+            const name = signupName.value.trim();
+            const email = signupEmail.value.trim();
+            const password = signupPassword.value.trim();
+            
+            if (!name || !email || !password) {
+                signupError.textContent = 'Please fill in all fields';
+                return;
+            }
+            
+            if (password.length < 6) {
+                signupError.textContent = 'Password must be at least 6 characters';
+                return;
+            }
+            
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                await userCredential.user.updateProfile({
+                    displayName: name
+                });
+                
+                // Add user to Firestore
+                await db.collection('users').doc(userCredential.user.uid).set({
+                    name: name,
+                    email: email,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                clearAuthFields();
+            } catch (error) {
+                signupError.textContent = getAuthErrorMessage(error);
+            }
+        });
+        
+        // Login with Google
+        googleLoginBtn.addEventListener('click', () => {
+            signInWithGoogle();
+        });
+        
+        // Sign up with Google
+        googleSignupBtn.addEventListener('click', () => {
+            signInWithGoogle();
+        });
+        
+        // Sign in with Google function
+        async function signInWithGoogle() {
+            try {
+                const result = await auth.signInWithPopup(googleProvider);
+                const user = result.user;
+                
+                // Check if the user already exists in Firestore
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                
+                if (!userDoc.exists) {
+                    // Add user to Firestore if they don't exist
+                    await db.collection('users').doc(user.uid).set({
+                        name: user.displayName,
+                        email: user.email,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+            } catch (error) {
+                loginError.textContent = getAuthErrorMessage(error);
+                signupError.textContent = getAuthErrorMessage(error);
+            }
+        }
+        
+        // Logout function
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                // Update user's online status to false before logout
+                if (currentUser) {
+                    await rtdb.ref(`users/${currentUser.uid}/online`).set(false);
+                }
+                
+                await auth.signOut();
+            } catch (error) {
+                console.error('Error signing out:', error);
+            }
+        });
+        
+        // Send message function - FIXED to avoid duplicates
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        async function sendMessage() {
+            const messageText = messageInput.value.trim();
+            
+            if (!messageText) return;
+            
+            if (!currentUser) {
+                alert('You must be logged in to send messages');
+                return;
+            }
+            
+            // Disable send button and show sending status
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+            
+            try {
+                console.log('Attempting to send message...');
+                
+                // Create message object
+                const messageData = {
+                    text: messageText,
+                    senderId: currentUser.uid,
+                    senderName: currentUser.displayName || 'Anonymous',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                console.log('Message data:', messageData);
+                
+                // Check if Firestore is available
+                if (!db) {
+                    throw new Error('Firestore is not initialized');
+                }
+                
+                // Use set with auto-ID
+                const newMessageRef = db.collection('groups').doc(GROUP_ID)
+                    .collection('messages').doc();
+                        
+                await newMessageRef.set(messageData);
+                
+                console.log('Message sent successfully with ID:', newMessageRef.id);
+                
+                // Clear input field
+                messageInput.value = '';
+                
+                // No local display - rely on the onSnapshot listener
+                
+            } catch (error) {
+                console.error('Error sending message:', error);
+                
+                // Show detailed error to help with debugging
+                const errorMessage = document.createElement('div');
+                errorMessage.classList.add('message', 'system');
+                errorMessage.textContent = `Failed to send message: ${error.message || 'Unknown error'}`;
+                chatMessages.appendChild(errorMessage);
+                scrollToBottom();
+                
+                // Check for connection issues
+                try {
+                    const connectionRef = rtdb.ref('.info/connected');
+                    connectionRef.once('value', (snap) => {
+                        const connected = snap.val();
+                        console.log('Firebase connection status:', connected ? 'connected' : 'disconnected');
+                        
+                        if (!connected) {
+                            const reconnectMessage = document.createElement('div');
+                            reconnectMessage.classList.add('message', 'system');
+                            reconnectMessage.textContent = 'Lost connection to server. Attempting to reconnect...';
+                            chatMessages.appendChild(reconnectMessage);
+                            scrollToBottom();
+                        }
+                    });
+                } catch (connError) {
+                    console.error('Error checking connection:', connError);
+                }
+            } finally {
+                // Re-enable send button
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send';
+            }
+        }
+        
+        // Toggle online users list
+        usersCount.addEventListener('click', () => {
+            onlineUsersContainer.style.display = onlineUsersContainer.style.display === 'none' ? 'block' : 'none';
+        });
+        
+        // Click outside to close online users container
+        document.addEventListener('click', (e) => {
+            if (!usersCount.contains(e.target) && !onlineUsersContainer.contains(e.target)) {
+                onlineUsersContainer.style.display = 'none';
+            }
+        });
+        
+        // Auth state change listener
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                
+                // Reset the displayedMessageIds when a user logs in
+                displayedMessageIds = new Set();
+                
+                // Setup UI for logged in user
+                setupLoggedInUI(user);
+                
+                // Update user's online status
+                await updateUserOnlineStatus(user, true);
+                
+                // Subscribe to presence disconnect events
+                subscribeToPresenceDisconnect(user);
+                
+                // Load messages and users
+                loadMessages();
+                loadOnlineUsers();
+                
+                // Show chat container, hide auth
+                authContainer.style.display = 'none';
+                chatContainer.style.display = 'flex';
+            } else {
+                // Cleanup listeners
+                cleanupListeners();
+                
+                // Reset UI
+                currentUser = null;
+                chatMessages.innerHTML = '';
+                onlineUsersList.innerHTML = '';
+                
+                // Show auth container, hide chat
+                authContainer.style.display = 'flex';
+                chatContainer.style.display = 'none';
+                onlineUsersContainer.style.display = 'none';
+            }
+        });
+        
+        // Setup UI for logged in user
+        function setupLoggedInUI(user) {
+            // Set user name
+            userName.textContent = user.displayName || 'Anonymous';
+            
+            // Set user avatar (first letter of name or placeholder)
+            if (user.photoURL) {
+                userAvatar.innerHTML = `<img src="${user.photoURL}" alt="${user.displayName || 'User'}">`;
+            } else if (user.displayName) {
+                userAvatar.textContent = user.displayName.charAt(0).toUpperCase();
+            } else {
+                userAvatar.textContent = 'U';
+            }
+        }
+        
+        // Update user's online status
+        async function updateUserOnlineStatus(user, status) {
+            try {
+                await rtdb.ref(`users/${user.uid}`).update({
+                    name: user.displayName || 'Anonymous',
+                    online: status,
+                    lastSeen: firebase.database.ServerValue.TIMESTAMP
+                });
+            } catch (error) {
+                console.error('Error updating online status:', error);
+            }
+        }
+        
+        // Subscribe to presence disconnect
+        function subscribeToPresenceDisconnect(user) {
+            // Setup presence system using RTDB
+            const userStatusRef = rtdb.ref(`users/${user.uid}/online`);
+            
+            // When the client disconnects, update the online status
+            userStatusRef.onDisconnect().set(false);
+        }
+        
+        // Load messages - IMPROVED to handle duplicates
+        function loadMessages() {
+            console.log("Loading messages...");
+            
+            // Clean up existing listener
+            if (messageListener) {
+                console.log("Removing previous message listener");
+                messageListener();
+            }
+            
+            try {
+                // Add loading indicator
+                const loadingIndicator = document.createElement('div');
+                loadingIndicator.classList.add('message', 'system');
+                loadingIndicator.textContent = 'Loading messages...';
+                loadingIndicator.id = 'loading-messages';
+                chatMessages.appendChild(loadingIndicator);
+                
+                // Create messages reference
+                messagesRef = db.collection('groups').doc(GROUP_ID).collection('messages')
+                    .orderBy('timestamp', 'asc')
+                    .limitToLast(MESSAGE_LIMIT);
+                
+                console.log("Message reference created:", GROUP_ID);
+                
+                // Listen for new messages
+                messageListener = messagesRef.onSnapshot(snapshot => {
+                    console.log(`Received snapshot with ${snapshot.docChanges().length} changes`);
+                    
+                    // Remove loading indicator
+                    const loadingElement = document.getElementById('loading-messages');
+                    if (loadingElement) {
+                        loadingElement.remove();
+                    }
+                    
+                    // Handle only changes since last snapshot
+                    snapshot.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            const message = change.doc.data();
+                            const messageId = change.doc.id;
+                            
+                            // Check if this message has already been displayed
+                            if (!displayedMessageIds.has(messageId)) {
+                                console.log(`New message: ${messageId}`, message);
+                                displayMessage(message, messageId);
+                                displayedMessageIds.add(messageId);
+                            }
+                        }
+                    });
+                    
+                    // Scroll to bottom after all messages are added
+                    scrollToBottom();
+                }, error => {
+                    console.error('Error loading messages:', error);
+                    
+                    // Remove loading indicator
+                    const loadingElement = document.getElementById('loading-messages');
+                    if (loadingElement) {
+                        loadingElement.remove();
+                    }
+                    
+                    // Show error message
+                    const errorMessage = document.createElement('div');
+                    errorMessage.classList.add('message', 'system');
+                    errorMessage.textContent = `Error loading messages: ${error.message}`;
+                    chatMessages.appendChild(errorMessage);
+                });
+            } catch (error) {
+                console.error("Error setting up message listener:", error);
+                
+                // Show error in chat
+                const errorMessage = document.createElement('div');
+                errorMessage.classList.add('message', 'system');
+                errorMessage.textContent = `Failed to connect to message service: ${error.message}`;
+                chatMessages.appendChild(errorMessage);
+            }
+        }
+        
+        // Display a message in the chat - NO CHANGES to this function
+        function displayMessage(message, messageId) {
+            const isCurrentUser = currentUser && message.senderId === currentUser.uid;
+            
+            // Fix for timestamp processing
+            let messageTime = 'now';
+            if (message.timestamp) {
+                // Check if timestamp is a Firestore timestamp object with toDate method
+                if (typeof message.timestamp.toDate === 'function') {
+                    messageTime = formatTime(message.timestamp.toDate());
+                } 
+                // Check if timestamp is already a Date object
+                else if (message.timestamp instanceof Date) {
+                    messageTime = formatTime(message.timestamp);
+                }
+                // Otherwise use 'now' (already set as default)
+            }
+            
+            // Create message element
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            
+            if (message.system) {
+                // System message
+                messageElement.classList.add('system');
+                messageElement.innerHTML = `
+                    ${message.text}
+                `;
+            } else {
+                // Regular user message
+                messageElement.classList.add(isCurrentUser ? 'sent' : 'received');
+                messageElement.innerHTML = `
+                    ${!isCurrentUser ? `<strong>${message.senderName}</strong><br>` : ''}
+                    ${message.text}
+                    <div class="message-info">${messageTime}</div>
+                `;
+            }
+            
+            // Add message to chat
+            chatMessages.appendChild(messageElement);
+        }
+        
+        // Load online users
+        function loadOnlineUsers() {
+            // Clean up existing listener
+            if (usersListener) {
+                usersListener();
+            }
+            
+            // Create users reference
+            usersRef = rtdb.ref('users');
+            
+            // Listen for online status changes
+            usersListener = usersRef.on('value', snapshot => {
+                const onlineUsers = [];
+                
+                snapshot.forEach(userSnapshot => {
+                    const userData = userSnapshot.val();
+                    if (userData.online) {
+                        onlineUsers.push({
+                            id: userSnapshot.key,
+                            name: userData.name
+                        });
+                    }
+                });
+                
+                // Update online users count
+                usersCount.textContent = `${onlineUsers.length} online`;
+                
+                // Display online users list
+                displayOnlineUsers(onlineUsers);
+            }, error => {
+                console.error('Error loading online users:', error);
+            });
+        }
+        
+        // Display online users
+        function displayOnlineUsers(users) {
+            onlineUsersList.innerHTML = '';
+            
+            users.forEach(user => {
+                const userElement = document.createElement('li');
+                userElement.classList.add('online-user');
+                
+                const initial = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+                
+                userElement.innerHTML = `
+                    <div class="online-user-avatar">${initial}</div>
+                    <div class="online-user-name">${user.name}</div>
+                    <div class="online-status"></div>
+                `;
+                
+                onlineUsersList.appendChild(userElement);
+            });
+        }
+        
+        // Scroll to bottom of chat
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Format timestamp to readable time
+        function formatTime(date) {
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+        
+        // Get readable auth error message
+        function getAuthErrorMessage(error) {
+            switch (error.code) {
+                case 'auth/user-not-found':
+                case 'auth/wrong-password':
+                    return 'Invalid email or password';
+                case 'auth/email-already-in-use':
+                    return 'Email is already in use';
+                case 'auth/weak-password':
+                    return 'Password is too weak';
+                case 'auth/invalid-email':
+                    return 'Invalid email format';
+                case 'auth/popup-closed-by-user':
+                    return 'Sign in was cancelled';
+                default:
+                    return error.message || 'An error occurred during authentication';
+            }
+        }
+        
+        // Clear auth input fields
+        function clearAuthFields() {
+            loginEmail.value = '';
+            loginPassword.value = '';
+            signupName.value = '';
+            signupEmail.value = '';
+            signupPassword.value = '';
+            loginError.textContent = '';
+            signupError.textContent = '';
+        }
+        
+        // Cleanup listeners
+        function cleanupListeners() {
+            if (messageListener) {
+                messageListener();
+                messageListener = null;
+            }
+            
+            if (usersListener) {
+                usersRef.off('value', usersListener);
+                usersListener = null;
+            }
+        }
+        
+        // Add some system messages on load to guide users
+        window.addEventListener('load', () => {
+            // Check if there's a hash in the URL that might be an invitation link
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#invite=')) {
+                const inviteCode = hash.replace('#invite=', '');
+                if (inviteCode === 'concert2025') {
+                    // Add system message about special invitation
+                    setTimeout(() => {
+                        if (currentUser) {
+                            db.collection('groups').doc(GROUP_ID).collection('messages').add({
+                                text: 'You joined via a special invitation link! Welcome to the Concert-Premio group!',
+                                system: true,
+                                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                        }
+                    }, 2000);
+                }
+            }
+        });
+        
+        // Test Firebase connection
+        function testFirebaseConnection() {
+            console.log("Testing Firebase connection...");
+            
+            // Check RTDB connection
+            const connectedRef = rtdb.ref(".info/connected");
+            connectedRef.on("value", (snap) => {
+                if (snap.val() === true) {
+                    console.log("Connected to Firebase RTDB");
+                    
+                    // Add a system message showing connected status
+                    const connectedMessage = document.createElement('div');
+                    connectedMessage.classList.add('message', 'system');
+                    connectedMessage.textContent = 'Connected to server successfully!';
+                    chatMessages.appendChild(connectedMessage);
+                    
+                    // After confirming connection, initialize chat
+                    initializeChat();
+                } else {
+                    console.log("Not connected to Firebase RTDB");
+                    
+                    // Show disconnected message
+                    const disconnectedMessage = document.createElement('div');
+                    disconnectedMessage.classList.add('message', 'system');
+                    disconnectedMessage.textContent = 'Disconnected from server. Trying to reconnect...';
+                    chatMessages.appendChild(disconnectedMessage);
+                }
+            });
+        }
+        
+        // Create a test message to verify database writes are working
+        async function createTestMessage() {
+            try {
+                console.log("Creating test message to verify write access...");
+                
+                const testRef = db.collection('groups').doc(GROUP_ID).collection('system_checks').doc('connection_test');
+                await testRef.set({
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    client: navigator.userAgent,
+                    test: "Connection test"
+                });
+                
+                console.log("Test message created successfully - write access confirmed");
+                return true;
+            } catch (error) {
+                console.error("Failed to create test message:", error);
+                
+                // Add visible error for user
+                const accessErrorMessage = document.createElement('div');
+                accessErrorMessage.classList.add('message', 'system');
+                accessErrorMessage.textContent = `Database write access error: ${error.message}. Chat functionality may be limited.`;
+                chatMessages.appendChild(accessErrorMessage);
+                return false;
+            }
+        }
+        
+        // Initialize - add welcome system message if it doesn't exist yet
+        async function initializeChat() {
+            try {
+                console.log("Initializing chat...");
+                
+                // First verify write access with a test message
+                const writeAccessConfirmed = await createTestMessage();
+                
+                if (writeAccessConfirmed) {
+                    // Check if welcome message exists
+                    const welcomeQuery = await db.collection('groups').doc(GROUP_ID).collection('messages')
+                        .where('system', '==', true)
+                        .where('welcome', '==', true)
+                        .limit(1)
+                        .get();
+                    
+                    console.log("Welcome message check:", welcomeQuery.empty ? "No welcome message found" : "Welcome message exists");
+                    
+                    if (welcomeQuery.empty) {
+                        // Add welcome message
+                        await db.collection('groups').doc(GROUP_ID).collection('messages').add({
+                            text: 'Welcome to Concert-Premio Group Chat! Discuss concerts and share ticket information. Please be respectful to all members.',
+                            system: true,
+                            welcome: true,
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        console.log("Welcome message created");
+                    }
+                }
+            } catch (error) {
+                console.error('Error initializing chat:', error);
+                
+                // Show error in chat
+                const errorMessage = document.createElement('div');
+                errorMessage.classList.add('message', 'system');
+                errorMessage.textContent = `Chat initialization error: ${error.message}`;
+                chatMessages.appendChild(errorMessage);
+            }
+        }
+        
+        // Call test connection on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add a small delay to ensure Firebase is fully initialized
+            setTimeout(() => {
+                testFirebaseConnection();
+            }, 1000);
+        });
+        </script>
+        </body>
+        </html>

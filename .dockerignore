@@ -1,0 +1,11 @@
+.git
+.gitignore
+.vscode
+node_modules
+vendor
+*.log
+*.tmp
+*.bak
+trial/cache
+uploads
+trial/uploads

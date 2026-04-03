@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cafe Raves - Pay ₹899</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #111;
+      color: #fff;
+      padding: 2rem;
+    }
+
+    .form-container {
+      max-width: 500px;
+      margin: auto;
+      background: #1c1c1c;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+
+    input, button {
+      display: block;
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    input {
+      background: #2a2a2a;
+      color: white;
+    }
+
+    button {
+      background: #ff2471;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .success {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .ticket-id {
+      font-size: 1.2rem;
+      color: #00ff88;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>🎟️ Cafe Raves Ticket</h2>
+    <form id="paymentForm">
+      <input type="text" id="fullName" placeholder="Your Full Name" required />
+      <input type="email" id="email" placeholder="Email Address" required />
+      <input type="tel" id="phone" placeholder="Phone Number" required />
+      <button type="submit">Pay ₹899</button>
+    </form>
+
+    <div class="success" id="successBox" style="display: none;">
+      <h3>✅ Payment Successful</h3>
+      <p>Thank you, <span id="ticketName"></span>!</p>
+      <p>Your Ticket ID is:</p>
+      <div class="ticket-id" id="ticketId"></div>
+    </div>
+  </div>
+
+  <script src="cr-payment.js"></script>
+</body>
+</html>

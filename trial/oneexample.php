@@ -1,0 +1,891 @@
+<?php
+// --- PHP: Fetch events from DB at the top of the file ---
+require_once __DIR__ . '/../inc/config.php';
+$events = [];
+try {
+    $stmt = $pdo->query("SELECT id, title FROM events ORDER BY date DESC");
+    $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    $events = [];
+}
+
+// Handle form submission
+$success = false;
+$error = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fullName'])) {
+    // Helper for checkbox fields
+    function checkbox($arr, $key) {
+        return (is_array($arr) && in_array($key, $arr)) ? 1 : 0;
+    }
+
+    $full_name = $_POST['fullName'] ?? '';
+    $email_address = $_POST['email'] ?? '';
+    $mobile_number = $_POST['mobile'] ?? '';
+    $concert_name = $_POST['concertTitle'] ?? ($_POST['customConcertName'] ?? $_POST['concertSearch'] ?? '');
+    $concert_date = $_POST['concertDate'] ?: ($_POST['customConcertDate'] ?? null);
+    $number_of_attendances = $_POST['attendees'] ?? 1;
+    $attending_with = $_POST['attendingWith'] ?? '';
+    $services = $_POST['services'] ?? [];
+    $concert_tickets = checkbox($services, 'tickets');
+    $travel_arrangements = checkbox($services, 'travel');
+    $accommodation = checkbox($services, 'accommodation');
+    $local_logistics = checkbox($services, 'logistics');
+    $local_guide_expenses = checkbox($services, 'guide');
+    $merchandise = checkbox($services, 'merchandise');
+    $accommodation_preference = $_POST['accommodationPref'] ?? '';
+    $travel_preference = $_POST['travelPref'] ?? '';
+    $additional_notes = $_POST['notes'] ?? '';
+
+    try {
+        $stmt = $pdo->prepare("INSERT INTO concierge
+            (full_name, email_address, mobile_number, concert_name, concert_date, number_of_attendances, attending_with, concert_tickets, travel_arrangements, accommodation, local_logistics, local_guide_expenses, merchandise, accommodation_preference, travel_preference, additional_notes)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([
+            $full_name,
+            $email_address,
+            $mobile_number,
+            $concert_name,
+            $concert_date,
+            $number_of_attendances,
+            $attending_with,
+            $concert_tickets,
+            $travel_arrangements,
+            $accommodation,
+            $local_logistics,
+            $local_guide_expenses,
+            $merchandise,
+            $accommodation_preference,
+            $travel_preference,
+            $additional_notes
+        ]);
+        $success = true;
+    } catch (Exception $e) {
+        $error = $e->getMessage();
+    }
+}
+?>
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concert Circle Concierge</title>
+    <link rel="icon" href="LOGO for website (circular).png" type="image/x-icon">
+    <link rel="shortcut icon" href="LOGO for website (circular).png" type="image/x-icon">
+    <link rel="icon" type="image/x-icon" href="LOGO for website (circular).png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4ddde0;
+            --secondary-color: #d269e6;
+            --accent-color: #ff3131;
+            --highlight-color: #ffd700;
+            --dark-bg: rgba(0, 0, 0, 0.7);
+            --card-bg: rgba(0, 0, 0, 0.4);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --success-bg: rgba(77, 221, 224, 0.2);
+            --error-bg: rgba(255, 49, 49, 0.2);
+            --transition: all 0.3s ease;
+            --container-width: 1400px;
+            --spacing-xs: 5px;
+            --spacing-sm: 10px;
+            --spacing-md: 15px;
+            --spacing-lg: 20px;
+            --spacing-xl: 30px;
+            --spacing-xxl: 50px;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+            position: relative;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(78, 205, 196, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(69, 183, 209, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 25px;
+            padding: 50px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 107, 0.5), transparent);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--primary-color), #52bdfb, var(--secondary-color), var(--accent-color), var(--highlight-color));
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            animation: gradientShift 8s ease-in-out infinite;
+            letter-spacing: -1px;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .subtitle {
+            color: #b8b8b8;
+            font-size: 18px;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            border-radius: 2px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
+            background: var(--input-bg);
+            color: #fff;
+            font-size: 16px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 0 0 4px rgba(77, 221, 224, 0.1),
+                0 8px 25px rgba(77, 221, 224, 0.15);
+            transform: translateY(-2px);
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 16px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 50px;
+        }
+
+        select option {
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 10px;
+            border: none;
+        }
+
+        select::-ms-expand {
+            display: none;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: var(--input-bg);
+            border-radius: 12px;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .checkbox-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(77, 221, 224, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .checkbox-item:hover {
+            background: rgba(77, 221, 224, 0.1);
+            border-color: rgba(77, 221, 224, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(77, 221, 224, 0.15);
+        }
+
+        .checkbox-item:hover::before {
+            left: 100%;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            accent-color: var(--primary-color);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .radio-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            accent-color: var(--primary-color);
+        }
+
+        .concert-search {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .concert-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.98);
+            border: 1px solid var(--primary-color);
+            border-radius: 15px;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: block;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .concert-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .concert-item {
+            padding: 16px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            color: #fff;
+        }
+
+        .concert-item:hover {
+            background: rgba(77, 221, 224, 0.1);
+            transform: translateX(5px);
+            color: var(--primary-color);
+        }
+
+        .concert-item:last-child {
+            border-bottom: none;
+        }
+
+        .other-concert-fields {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .other-concert-fields.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .service-fee-notice {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-fee-notice::before {
+           
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .service-fee-text {
+            color: var(--highlight-color);
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--accent-color) 100%);
+            background-size: 300% 300%;
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            animation: gradientShift 6s ease-in-out infinite;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 35px rgba(77, 221, 224, 0.4),
+                0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: var(--primary-color);
+        }
+
+        .success-message, .error-message {
+            display: none;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .success-message {
+            background: rgba(77, 221, 224, 0.2);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .error-message {
+            background: rgba(255, 49, 49, 0.2);
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .container {
+                padding: 30px 20px;
+                margin: 10px;
+                border-radius: 20px;
+            }
+
+            .logo {
+                font-size: 36px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            .section-title {
+                font-size: 22px;
+            }
+        }
+
+        .concert-dropdown::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .concert-dropdown::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .concert-dropdown::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .concert-dropdown::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Concert Circle</div>
+            <div class="subtitle">Concierge Service - Your Perfect Concert Experience</div>
+        </div>
+
+        <?php if ($success): ?>
+            <div class="success-message" id="successMessage" style="display:block;">
+                ✅ Thank you for your concert concierge request. We have received your submission and our team will contact you within a few hours.
+            </div>
+        <?php elseif ($error): ?>
+            <div class="error-message" id="errorMessage" style="display:block;">
+                ❌ There was an error submitting your request: <?php echo htmlspecialchars($error); ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="loading" id="loadingMessage">
+            🎵 Submitting your request... Please wait.
+        </div>
+
+        <form id="conciergeForm" method="POST">
+            <!-- Personal Details -->
+            <div class="form-section">
+                <h2 class="section-title">Personal Details</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fullName">Full Name *</label>
+                        <input type="text" id="fullName" name="fullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number (WhatsApp preferred) *</label>
+                        <input type="tel" id="mobile" name="mobile" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">Current City/Location *</label>
+                        <input type="text" id="city" name="city" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Concert Details -->
+            <div class="form-section">
+                <h2 class="section-title">Concert Details</h2>
+                <div class="form-group">
+                    <label for="concertSearch">Search Concert/Artist *</label>
+                    <div class="concert-search">
+                        <input type="text" id="concertSearch" name="concertSearch" placeholder="Type to search concerts..." oninput="searchConcerts()" onfocus="showDropdown()" autocomplete="off" required>
+                        <input type="hidden" id="concertId" name="concertId">
+                        <input type="hidden" id="concertTitle" name="concertTitle">
+                        <div class="concert-dropdown" id="concertDropdown"></div>
+                    </div>
+                </div>
+
+                <!-- Other Concert Fields (Hidden by default) -->
+                <div class="other-concert-fields" id="otherConcertFields">
+                    <h3 style="color: var(--primary-color); margin-bottom: 15px;">Custom Concert Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customConcertName">Concert/Artist Name *</label>
+                            <input type="text" id="customConcertName" name="customConcertName" placeholder="Enter concert or artist name">
+                        </div>
+                        <div class="form-group">
+                            <label for="customConcertDate">Concert Date *</label>
+                            <input type="date" id="customConcertDate" name="customConcertDate">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="customConcertVenue">Venue/Location *</label>
+                        <input type="text" id="customConcertVenue" name="customConcertVenue" placeholder="Enter venue name and city">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="concertDate">Concert Date (if known)</label>
+                        <input type="date" id="concertDate" name="concertDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="attendees">Number of Attendees *</label>
+                        <input type="number" id="attendees" name="attendees" min="1" max="10" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Attending with:</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="solo" name="attendingWith" value="solo">
+                            <label for="solo">Solo</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="friends" name="attendingWith" value="friends">
+                            <label for="friends">With Friends</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="family" name="attendingWith" value="family">
+                            <label for="family">With Family</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Preferences -->
+            <div class="form-section">
+                <h2 class="section-title">Services Needed</h2>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="tickets" name="services[]" value="tickets">
+                        <label for="tickets">Concert Tickets</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="travel" name="services[]" value="travel">
+                        <label for="travel">Travel Arrangements</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="accommodation" name="services[]" value="accommodation">
+                        <label for="accommodation">Accommodation</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="logistics" name="services[]" value="logistics">
+                        <label for="logistics">Local Logistics</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="guide" name="services[]" value="guide">
+                        <label for="guide">Local Guide/Experiences</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="merchandise" name="services[]" value="merchandise">
+                        <label for="merchandise">Merchandise</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Preferences -->
+            <div class="form-section">
+                <h2 class="section-title">Quick Preferences</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="accommodation-pref">Accommodation Preference</label>
+                        <select id="accommodation-pref" name="accommodationPref">
+                            <option value="">Select preference</option>
+                            <option value="venue">Near venue</option>
+                            <option value="city">City center</option>
+                            <option value="budget">Budget-friendly</option>
+                            <option value="luxury">Luxury accommodation</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="travel-pref">Travel Preference</label>
+                        <select id="travel-pref" name="travelPref">
+                            <option value="">Select preference</option>
+                            <option value="fastest">Fastest route</option>
+                            <option value="cheapest">Cheapest route</option>
+                            <option value="comfortable">Most comfortable</option>
+                            <option value="direct">Direct flights only</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Notes -->
+            <div class="form-section">
+                <h2 class="section-title">Additional Notes</h2>
+                <div class="form-group">
+                    <label for="notes">Special Requirements (Optional)</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Any special requirements or preferences..."></textarea>
+                </div>
+            </div>
+
+            <!-- Service Fee Notice -->
+            <div class="service-fee-notice">
+                <div class="service-fee-text">
+                    Note: All services provided through Concert Circle's concierge will incur a nominal service fee of 10% per transaction.
+                </div>
+            </div>
+
+            <!-- Consent -->
+            <div class="form-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="consent" name="consent" required>
+                    <label for="consent">I consent to being contacted by Concert Circle for itinerary planning and updates, and I agree to the 10% service fee. *</label>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Submit Request</button>
+        </form>
+    </div>
+
+    <script>
+        // --- JS: Use PHP to output events as a JS array ---
+        const events = <?php echo json_encode($events); ?>;
+        let concerts = events.map(ev => ev.title);
+        let concertsMap = {};
+        events.forEach(ev => { concertsMap[ev.title] = ev.id; });
+        concerts.push("Other (Not Listed)");
+
+        function showDropdown() {
+            const dropdown = document.getElementById('concertDropdown');
+            const input = document.getElementById('concertSearch');
+            if (input.value.length === 0) {
+                dropdown.innerHTML = concerts.map(concert =>
+                    `<div class="concert-item" onclick="selectConcert('${concert.replace(/'/g,"\\'")}')">${concert}</div>`
+                ).join('');
+            }
+            dropdown.classList.add('show');
+        }
+
+        function searchConcerts() {
+            const input = document.getElementById('concertSearch');
+            const dropdown = document.getElementById('concertDropdown');
+            const query = input.value.toLowerCase();
+
+            if (query.length === 0) {
+                dropdown.innerHTML = concerts.map(concert =>
+                    `<div class="concert-item" onclick="selectConcert('${concert.replace(/'/g,"\\'")}')">${concert}</div>`
+                ).join('');
+                dropdown.classList.add('show');
+                return;
+            }
+
+            const filtered = concerts.filter(concert =>
+                concert.toLowerCase().includes(query)
+            );
+
+            if (filtered.length > 0) {
+                dropdown.innerHTML = filtered.map(concert =>
+                    `<div class="concert-item" onclick="selectConcert('${concert.replace(/'/g,"\\'")}')">${concert}</div>`
+                ).join('');
+                dropdown.classList.add('show');
+            } else {
+                dropdown.innerHTML = `
+                    <div class="concert-item">No concerts found</div>
+                    <div class="concert-item" onclick="selectConcert('Other (Not Listed)')">Other (Not Listed)</div>
+                `;
+                dropdown.classList.add('show');
+            }
+        }
+
+        function selectConcert(concert) {
+            document.getElementById('concertSearch').value = concert;
+            document.getElementById('concertDropdown').classList.remove('show');
+            document.getElementById('concertId').value = concertsMap[concert] || '';
+            document.getElementById('concertTitle').value = concert;
+
+            // Show/hide other concert fields based on selection
+            const otherFields = document.getElementById('otherConcertFields');
+            if (concert === 'Other (Not Listed)') {
+                otherFields.classList.add('show');
+                document.getElementById('customConcertName').required = true;
+                document.getElementById('customConcertDate').required = true;
+                document.getElementById('customConcertVenue').required = true;
+            } else {
+                otherFields.classList.remove('show');
+                document.getElementById('customConcertName').required = false;
+                document.getElementById('customConcertDate').required = false;
+                document.getElementById('customConcertVenue').required = false;
+                document.getElementById('customConcertName').value = '';
+                document.getElementById('customConcertDate').value = '';
+                document.getElementById('customConcertVenue').value = '';
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.concert-search')) {
+                document.getElementById('concertDropdown').classList.remove('show');
+            }
+        });
+
+        // Optionally: Pre-fill hidden fields if user types exact match
+        document.getElementById('concertSearch').addEventListener('input', function() {
+            const val = this.value;
+            if (concertsMap[val]) {
+                document.getElementById('concertId').value = concertsMap[val];
+                document.getElementById('concertTitle').value = val;
+            } else {
+                document.getElementById('concertId').value = '';
+                document.getElementById('concertTitle').value = '';
+            }
+        });
+
+        // Form submission with database integration
+        </script>
+</body>
+</html>
